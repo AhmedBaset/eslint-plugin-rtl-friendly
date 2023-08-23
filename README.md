@@ -1,5 +1,3 @@
-
-
 This is a trial of [GitHub Repository Template](https://github.blog/2019-06-06-generate-new-repositories-with-repository-templates/).
 
 Please update `package.json` after you created new repository with this template.
