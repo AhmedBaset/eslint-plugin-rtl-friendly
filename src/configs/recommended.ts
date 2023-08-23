@@ -2,6 +2,6 @@
 
 export const recommended = {
   rules: {
-    "reatom/example-rule": "error"
+    "rtl-friendly/tw-logical-properties": "warn"
   }
 }
