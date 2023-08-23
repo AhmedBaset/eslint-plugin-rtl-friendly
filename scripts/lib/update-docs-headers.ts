@@ -70,11 +70,13 @@ function renderFooter(rule: RuleInfo): string {
   return `\n\n## Implementation\n\n- [Rule source](${rulePath})\n- [Test source](${testPath})`;
 }
 
-for (const rule of rules) {
-  const filePath = path.resolve(docsRoot, `${rule.name}.md`);
-  const original = await readFile(filePath, 'utf-8');
-  const body = original.replace(headerPattern, '').replace(footerPattern, '');
-  const content = `${renderHeader(rule)}${body}${renderFooter(rule)}\n`;
+(async () => {
+  for (const rule of rules) {
+    const filePath = path.resolve(docsRoot, `${rule.name}.md`);
+    const original = await readFile(filePath, 'utf-8');
+    const body = original.replace(headerPattern, '').replace(footerPattern, '');
+    const content = `${renderHeader(rule)}${body}${renderFooter(rule)}\n`;
 
-  await writeFile(filePath, content);
-}
+    await writeFile(filePath, content);
+  }
+})()

@@ -1,6 +1,6 @@
 import path from 'path';
 import { pluginId } from './plugin-id';
-import { readdir } from 'fs/promises';
+import { readdirSync } from 'fs';
 const rootDir = path.resolve(__dirname, '../../src/rules/');
 
 type RuleType = 'suggestion' | 'problem' | 'layout';
@@ -22,7 +22,7 @@ export type CategoryInfo = {
   rules: RuleInfo[];
 };
 
-const rulesDirContent = await readdir(rootDir);
+const rulesDirContent = readdirSync(rootDir);
 
 export const rules: RuleInfo[] = rulesDirContent
   .sort()
