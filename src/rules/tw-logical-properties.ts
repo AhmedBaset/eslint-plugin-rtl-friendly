@@ -63,15 +63,17 @@ const ruleListener = (ctx: Rule.RuleContext) => {
       },
 
       fix: (fixer) => {
-        const fixedClassName = cnArr.map((cn) => {
-          if (conflictClassNames.includes(cn)) {
-            const { logical, physical } = logicalProperties.find((c) =>
-              cn.startsWith(c.physical)
-            )!;
-            return cn.replace(physical, logical);
-          }
-          return cn;
-        }).join(' ');
+        const fixedClassName = cnArr
+          .map((cn) => {
+            if (conflictClassNames.includes(cn)) {
+              const { logical, physical } = logicalProperties.find((c) =>
+                cn.startsWith(c.physical)
+              )!;
+              return cn.replace(physical, logical);
+            }
+            return cn;
+          })
+          .join(' ');
 
         return fixer.replaceText(node, `${attr}="${fixedClassName}"`);
       },

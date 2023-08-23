@@ -35,9 +35,8 @@ const content = categories.map(renderCategory).filter(Boolean).join('\n');
 
 writeFile(
   filePath,
-  readFileSync(filePath, 'utf8')
-    .replace(
-      /<!--RULE_TABLE_BEGIN-->[\s\S]*<!--RULE_TABLE_END-->/u,
-      `<!--RULE_TABLE_BEGIN-->\n${content}\n<!--RULE_TABLE_END-->`
-    )
+  readFileSync(filePath, 'utf8').replace(
+    /<!--RULE_TABLE_BEGIN-->[\s\S]*<!--RULE_TABLE_END-->/u,
+    `<!--RULE_TABLE_BEGIN-->\n${content}\n<!--RULE_TABLE_END-->`
+  )
 );

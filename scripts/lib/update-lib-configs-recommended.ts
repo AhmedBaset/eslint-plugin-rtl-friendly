@@ -20,6 +20,6 @@ export const recommended = {
   const lint = new ESLint({ fix: true });
   const lintResults = await lint.lintText(rawContent);
   const content = lintResults[0].output || rawContent;
-  
-  await writeFile(filePath, content);    
+
+  await writeFile(filePath, content);
 })();

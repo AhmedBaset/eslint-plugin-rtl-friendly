@@ -79,4 +79,4 @@ function renderFooter(rule: RuleInfo): string {
 
     await writeFile(filePath, content);
   }
-})()
+})();

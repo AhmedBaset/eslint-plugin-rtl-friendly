@@ -2,6 +2,6 @@
 
 export const recommended = {
   rules: {
-    "rtl-friendly/tw-logical-properties": "warn"
-  }
-}
+    'rtl-friendly/tw-logical-properties': 'warn',
+  },
+};
