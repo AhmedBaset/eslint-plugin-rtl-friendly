@@ -1,6 +1,4 @@
-**forked from [mysticatea/template-eslint-plugin](https://github.com/mysticatea/template-eslint-plugin)**
 
----
 
 This is a trial of [GitHub Repository Template](https://github.blog/2019-06-06-generate-new-repositories-with-repository-templates/).
 
