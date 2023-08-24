@@ -1,33 +1,4 @@
-This is a trial of [GitHub Repository Template](https://github.blog/2019-06-06-generate-new-repositories-with-repository-templates/).
-
-Please update `package.json` after you created new repository with this template.
-
-**File Structure**:
-
-- `docs/rules/` is the directory to put documentation.
-- `src/rules/` is the directory to put rule definitions.
-- `scripts/` is the directory to put development scripts.
-- `tests/` is the directory to put tests for `src/`.
-- `.eslintignore` and `.eslintrc.js` are the configuration to lint this repository.
-
-**Dependencies**:
-
-This template uses [Jest](https://jestjs.io/) and [GitHub Actions](https://github.co.jp/features/actions) for tests, as same as ESLint itself. If you want to use other tools, customize it.
-
-**Development Tools**:
-
-- `npm run add-rule foo` command adds a rule definition.
-- `npm update` command updates the following stuff by the `meta` property of rules:
-  - the header of `docs/rules/*.md`.
-  - `lib/configs/recommended.ts` file.
-  - `lib/index.ts` file.
-  - the rule table in `README.md` file.
-
-Below is an example of README.
-
----
-
-# eslint-plugin-rtl-friendly (template)
+# eslint-plugin-rtl-friendly
 
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-rtl-friendly.svg)](https://www.npmjs.com/package/eslint-plugin-rtl-friendly)
 [![Downloads/month](https://img.shields.io/npm/dm/eslint-plugin-rtl-friendly.svg)](http://www.npmtrends.com/eslint-plugin-rtl-friendly)
@@ -35,21 +6,75 @@ Below is an example of README.
 [![Coverage Status](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly/branch/master/graph/badge.svg)](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly)
 [![Dependency Status](https://david-dm.org/mysticatea/eslint-plugin-rtl-friendly.svg)](https://david-dm.org/mysticatea/eslint-plugin-rtl-friendly)
 
-A template for ESLint plugins.
+
+With a global audience that includes over 800 million people speaking right-to-left (RTL) languages, catering to RTL readability is crucial for international web apps. The **eslint-plugin-rtl-friendly** is a linter that helps you write RTL-friendly code.
+
+## Why does RTL matter?
+```md
+You read this text from left to right.
+```
+However, texts in RTL languages are read from right to left.
+```md
+هذا النص يُقرأ من اليمين إلى اليسار.
+```
+Notice how GitHub's markdown aligns the text to the right. It's not a bug; that's how RTL languages are read.
+
+Let's imagine you're writing code using the old way, and you're, for example, creating a button with text and an icon:
+```jsx
+return (
+  <button>
+    <CheckIcon className="mr-2" />
+    <span>{getTranslation("buttons.done")}</span>
+  </button>
+)
+```
+The previous code will work fine for LTR languages, but for RTL languages, the icon will be on the right side of the text, just like the margin (mr-2), which means there won't be any space between the icon and the text and extra space at the beggining of the button.
+```jsx
+LTR: [{icon} {text}]
+RTL: [{text}{icon} ]
+```
+The trick here is to use `me-2` instead of `mr-2`. `me-2` stands for `margin-inline-end`, which means right in LTR languages and left in RTL languages. So, the code should be:
+```jsx
+return (
+  <button>
+    <CheckIcon className="me-2" />
+    <span>{getTranslation("buttons.done")}</span>
+  </button>
+)
+```
+
+Up to this point, this plugin only reports a warning (with auto-fix) when using tailwindcss physical properties like `pl-*`, `mr-*`, `text-left`, `left-*`, `border-l-*`, `rounded-r-*`, etc. Instead, you should use their logical properties like `ps-*`, `ms-*`, `text-start`, `start-*`, `border-start-*`, `rounded-start-*`, etc.
+
+## RTL languages:
+- (ar) Arabic - العربية
+- (arc) Aramaic - ܐܪܡܝܐ
+- (ckb) Sorani Kurdish - کوردی
+- (dv) Divehi - ދިވެހިބަސް
+- (fa) Persian - فارسی
+- (ha) Hausa - هَوُسَ
+- (he) Hebrew - עברית
+- (khw) Khowar - کھوار
+- (ks) Kashmiri - कॉशुर
+- (ps) Pashto - پښتو
+- (sd) Sindhi - سنڌي
+- (ur) Urdu - اردو
+- (uz-Af) Uzbeki Afghanistan - ازبیک
+- (yi) Yiddish - ייִדיש
+
+![map](/assets/Writing_directions_of_the_world.svg.png)
 
 ## Installation
 
-Use [npm](https://www.npmjs.com/) or a compatibility tool to install.
-
-```
+```bash
 $ npm install --save-dev eslint eslint-plugin-rtl-friendly
+$ pnpm add -D eslint eslint-plugin-rtl-friendly
+$ yarn add -D eslint eslint-plugin-rtl-friendly
 ```
 
 ### Requirements
 
-- Node.js v8.10.0 or newer versions.
-- ESLint v5.16.0 or newer versions.
-
+- ESLint
+- Tailwindcss [V3.3.0](https://tailwindcss.com/blog/tailwindcss-v3-3#simplified-rtl-support-with-logical-properties) or higher
 ## Usage
 
 Write your config file such as `.eslintrc.yml`.
@@ -58,7 +83,7 @@ Write your config file such as `.eslintrc.yml`.
 plugins:
   - rtl-friendly
 rules:
-  rtl-friendly/example-rule: error
+  rtl-friendly/tw-logical-properties: warn
 ```
 
 See also [Configuring ESLint](https://eslint.org/docs/user-guide/configuring).
@@ -79,22 +104,14 @@ See also [Configuring ESLint](https://eslint.org/docs/user-guide/configuring).
 
 <!--RULE_TABLE_END-->
 
-## Semantic Versioning Policy
-
-This plugin follows [Semantic Versioning](http://semver.org/) and [ESLint's Semantic Versioning Policy](https://github.com/eslint/eslint#semantic-versioning-policy).
-
-## Changelog
-
-- [GitHub Releases]()
-
 ## Contributing
 
 Welcome your contribution!
+## TODO:
 
-See also [ESLint Contribution Guide](https://eslint.org/docs/developer-guide/contributing/).
-
-### Development Tools
-
-- `npm test` runs tests.
-- `npm run update` updates the package version. And it updates `src/configs/recommended.ts`, `lib/index.ts`, and `README.md`'s rule table. See also [npm version CLI command](https://docs.npmjs.com/cli/version).
-- `npm run add-rule <RULE_ID>` creates three files to add a new rule.
+- [x] Tailwindcss physical properties to logical properties
+- [ ] Strict `<html>` to have dir attribute depending on a codition or whatever detecting the language
+- [ ] Strict `<code>` to have `dir="ltr"` to override the parent's direction
+- [ ] in the future maybe throw a warning that `letter-spacing` doesn't work well with RTL languages to disable it in rtl `rtl:***` (NOT SURE)
+- [ ] text-opacity like the previous one
+- [Some resources](https://rtlstyling.com/posts/rtl-styling)
