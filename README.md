@@ -4,6 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-rtl-friendly.svg)](https://www.npmjs.com/package/eslint-plugin-rtl-friendly)
 [![Downloads/month](https://img.shields.io/npm/dm/eslint-plugin-rtl-friendly.svg)](http://www.npmtrends.com/eslint-plugin-rtl-friendly)
+[![Tests](https://github.com/A7med3bdulBaset/eslint-plugin-rtl-friendly/actions/workflows/test.yml/badge.svg)](https://github.com/A7med3bdulBaset/eslint-plugin-rtl-friendly/actions/workflows/test.yml)
 
 <!-- [![Build Status](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly.svg?branch=master)](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly)
 [![Coverage Status](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly/branch/master/graph/badge.svg)](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly) -->
@@ -59,6 +60,7 @@ return (
 
 Up to this point, this plugin only reports a warning (with auto-fix) when using tailwindcss physical properties like `pl-*`, `mr-*`, `text-left`, `left-*`, `border-l-*`, `rounded-r-*`, etc. Instead, you should use their logical properties like `ps-*`, `ms-*`, `text-start`, `start-*`, `border-start-*`, `rounded-start-*`, etc. You can read more about [logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Logical_Properties) or [tailwindcss logical properties support](https://tailwindcss.com/blog/tailwindcss-v3-3#simplified-rtl-support-with-logical-properties) or [our documentation](./docs/rules/no-physical-properties.md).
 
+![demo](/assets/vscode-demo.png)
 
 ## RTL languages:
 
