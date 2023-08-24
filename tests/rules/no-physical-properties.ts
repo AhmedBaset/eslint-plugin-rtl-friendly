@@ -1,5 +1,5 @@
 import { RuleTester } from 'eslint';
-import logicalProperties from '../../src/rules/tw-logical-properties';
+import logicalProperties from '../../src/rules/no-physical-properties';
 
 const tester = new RuleTester({
   parserOptions: {
@@ -9,7 +9,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run('logical-properties', logicalProperties, {
+tester.run('no-physical-properties', logicalProperties, {
   valid: [
     {
       name: 'should not report if logical properties are used',

@@ -11,7 +11,7 @@ const exampleRule: Rule.RuleModule = {
     },
     fixable: 'code',
     messages: {
-      physicalProperties: `Don't use physical properties like "{{ invalid }}" Use logical properties like "{{ valid }}" instead`,
+      noPhysicalProperties: `Don't use physical properties like "{{ invalid }}" Use logical properties like "{{ valid }}" instead`,
     },
     schema: [],
     hasSuggestions: true,
@@ -49,7 +49,7 @@ const ruleListener = (ctx: Rule.RuleContext) => {
 
     ctx.report({
       node,
-      messageId: 'physicalProperties',
+      messageId: 'noPhysicalProperties',
       data: {
         invalid: conflictClassNames.join(' '),
         valid: conflictClassNames
