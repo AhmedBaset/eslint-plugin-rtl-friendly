@@ -50,8 +50,8 @@ devDependencies:
     specifier: ^5.0.0
     version: 5.0.0(eslint-config-prettier@9.0.0)(eslint@8.47.0)(prettier@3.0.2)
   eslint-plugin-rtl-friendly:
-    specifier: ^0.0.3
-    version: 0.0.3(eslint@8.47.0)(tailwindcss@3.3.3)
+    specifier: ^0.1.0
+    version: 0.1.0(eslint@8.47.0)(tailwindcss@3.3.3)
   eslint-plugin-tailwindcss:
     specifier: ^3.13.0
     version: 3.13.0(tailwindcss@3.3.3)

@@ -1,7 +1,11 @@
 {
   "name": "eslint-plugin-rtl-friendly",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Encourage the use of RTL-friendly styles",
+  "author": {
+    "name": "Ahmed Abdelbaset",
+    "url": "https://twitter.com/A7med3bdulBaset"
+  },
   "engines": {
     "node": ">=8.10.0"
   },
@@ -77,7 +81,6 @@
     "right-to-left",
     "rtl-friendly"
   ],
-  "author": "Ahmed AbdulBaset <A7med3bdulBaset@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/A7med3bdulBaset/eslint-plugin-rtl-friendly/issues"
