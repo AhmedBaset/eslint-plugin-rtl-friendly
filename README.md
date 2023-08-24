@@ -1,10 +1,14 @@
 # eslint-plugin-rtl-friendly
 
+<div align="center">
+
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-rtl-friendly.svg)](https://www.npmjs.com/package/eslint-plugin-rtl-friendly)
 [![Downloads/month](https://img.shields.io/npm/dm/eslint-plugin-rtl-friendly.svg)](http://www.npmtrends.com/eslint-plugin-rtl-friendly)
-[![Build Status](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly.svg?branch=master)](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly)
-[![Coverage Status](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly/branch/master/graph/badge.svg)](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly)
-[![Dependency Status](https://david-dm.org/mysticatea/eslint-plugin-rtl-friendly.svg)](https://david-dm.org/mysticatea/eslint-plugin-rtl-friendly)
+
+<!-- [![Build Status](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly.svg?branch=master)](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly)
+[![Coverage Status](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly/branch/master/graph/badge.svg)](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly) -->
+
+</div>
 
 With a global audience that includes over 800 million people speaking right-to-left (RTL) languages, catering to RTL readability is crucial for international web apps. The **eslint-plugin-rtl-friendly** is a linter that helps you write RTL-friendly code.
 
@@ -15,10 +19,6 @@ You read this text from left to right.
 ```
 
 However, texts in RTL languages are read from right to left.
-
-```md
-هذا النص يُقرأ من اليمين إلى اليسار.
-```
 
 <div class="highlight highlight-text-md">
 <pre dir="rtl">
@@ -57,7 +57,8 @@ return (
 );
 ```
 
-Up to this point, this plugin only reports a warning (with auto-fix) when using tailwindcss physical properties like `pl-*`, `mr-*`, `text-left`, `left-*`, `border-l-*`, `rounded-r-*`, etc. Instead, you should use their logical properties like `ps-*`, `ms-*`, `text-start`, `start-*`, `border-start-*`, `rounded-start-*`, etc.
+Up to this point, this plugin only reports a warning (with auto-fix) when using tailwindcss physical properties like `pl-*`, `mr-*`, `text-left`, `left-*`, `border-l-*`, `rounded-r-*`, etc. Instead, you should use their logical properties like `ps-*`, `ms-*`, `text-start`, `start-*`, `border-start-*`, `rounded-start-*`, etc. You can read more about [logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Logical_Properties) or [tailwindcss RTL support](https://tailwindcss.com/docs/rtl#rtl-support-in-tailwind-css) or [our documentation](./docs/rules/no-physical-properties.md).
+
 
 ## RTL languages:
 
