@@ -1,21 +1,38 @@
-# rtl-friendly/tw-logical-properties
+# rtl-friendly/no-physical-properties
 
 > Encourage the use of RTL-friendly styles
 >
 > - ⭐️ This rule is included in `plugin:rtl-friendly/recommended` preset.
-> - ✒️ The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix some of the problems reported by this rule.
+> - ✒️ The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) can automatically fix all of the problems reported by this rule.
 
-(TODO: why is this rule useful?)
+This rule enforces the use of css logical properties instead of physical properties. This rule ensures that your code will work well in RTL languages as well as LTR languages.
+
+## Examples of incorrect code for this rule:
+
+```jsx
+<div className="ml-1 mr-2 pl-8 pr-2 left-0 right-12 text-left border-l-2 rounded-l-sm"></div>
+```
+
+## Examples of correct code for this rule:
+
+```jsx
+<div className="ms-1 me-2 ps-8 pe-2 start-0 end-12 text-start border-s-2 rounded-s-sm"></div>
+```
+
+## To automatically fix all of the problems reported by this rule
+
+- In VS Code, press `Quick Fix` (`Ctrl` + `.`) on the error line.
+- On the command line, run `eslint --fix`.
 
 ## Rule Details
 
-(TODO: how does this rule check code?)
+This rule checks if you are using any of the [tailwindcss physical properties](./../../src/configs/tw-logical-properties.ts) and suggests the use of its logical counterpart.
 
 ## Options
 
-(TODO: what do options exist?)
+There are no options for this rule yet. If you have any ideas, please [create an issue](https://github.com/a7med3bdulbaset/eslint-plugin-rtl-friendly/issues/new).
 
 ## Implementation
 
-- [Rule source](../../src/rules/tw-logical-properties.ts)
-- [Test source](../../tests/rules/tw-logical-properties.ts)
+- [Rule source](../../src/rules/no-physical-properties.ts)
+- [Test source](../../tests/rules/no-physical-properties.ts)
