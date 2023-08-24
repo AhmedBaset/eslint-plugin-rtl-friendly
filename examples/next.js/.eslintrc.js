@@ -8,8 +8,8 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:tailwindcss/recommended',
     'plugin:prettier/recommended',
-    // rtl-friendly
-    // 'plugin:rtl-friendly/recommended',
+    // extend recommended config
+    'plugin:rtl-friendly/recommended',
   ],
   overrides: [
     {
@@ -22,7 +22,14 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'tailwindcss', 'prettier'],
+  plugins: [
+    'react',
+    '@typescript-eslint',
+    'tailwindcss',
+    'prettier',
+    // add the plugin
+    'rtl-friendly',
+  ],
   rules: {
     'prettier/prettier': 'warn',
     'react/react-in-jsx-scope': 'off',

@@ -25,6 +25,7 @@
   "devDependencies": {
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-rtl-friendly": "^0.0.3",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "prettier": "^3.0.2"
   }

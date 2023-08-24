@@ -49,6 +49,9 @@ devDependencies:
   eslint-plugin-prettier:
     specifier: ^5.0.0
     version: 5.0.0(eslint-config-prettier@9.0.0)(eslint@8.47.0)(prettier@3.0.2)
+  eslint-plugin-rtl-friendly:
+    specifier: ^0.0.3
+    version: 0.0.3(eslint@8.47.0)(tailwindcss@3.3.3)
   eslint-plugin-tailwindcss:
     specifier: ^3.13.0
     version: 3.13.0(tailwindcss@3.3.3)
@@ -1090,6 +1093,17 @@ packages:
       semver: 6.3.1
       string.prototype.matchall: 4.0.8
     dev: false
+
+  /eslint-plugin-rtl-friendly@0.0.3(eslint@8.47.0)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-3/lRvZkkf+EBSr9krnnFx0HtW1l9mY2qHJmlV3TPE31llM9DSrxebd8sox200fQFwb5wW/N8Ecgu21pfMor9cw==}
+    engines: {node: '>=8.10.0'}
+    peerDependencies:
+      eslint: '>=5.16.0'
+      tailwindcss: '>=3.3.0'
+    dependencies:
+      eslint: 8.47.0
+      tailwindcss: 3.3.3
+    dev: true
 
   /eslint-plugin-tailwindcss@3.13.0(tailwindcss@3.3.3):
     resolution: {integrity: sha512-Fcep4KDRLWaK3KmkQbdyKHG0P4GdXFmXdDaweTIPcgOP60OOuWFbh1++dufRT28Q4zpKTKaHwTsXPJ4O/EjU2Q==}
