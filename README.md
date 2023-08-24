@@ -20,6 +20,12 @@ However, texts in RTL languages are read from right to left.
 هذا النص يُقرأ من اليمين إلى اليسار.
 ```
 
+<div class="highlight highlight-text-md">
+<pre dir="rtl">
+هذا النص يُقرأ من اليمين إلى اليسار.
+</pre>
+</div>
+
 Notice how GitHub's markdown aligns the text to the right. It's not a bug; that's how RTL languages are read.
 
 Let's imagine you're writing code using the old way, and you're, for example, creating a button with text and an icon:
@@ -76,7 +82,7 @@ Up to this point, this plugin only reports a warning (with auto-fix) when using 
 ## Installation
 
 ```bash
-# using pnpm 
+# using pnpm
 $ pnpm add -D eslint eslint-plugin-rtl-friendly
 # using yarn
 $ yarn add -D eslint eslint-plugin-rtl-friendly
@@ -96,15 +102,13 @@ Write your config file such as `.eslintrc.js`.
 ```js
 module.exports = {
   // ...
-  plugins: ["rtl-friendly"],
-	// extend our recommended config
-  extends: [
-    "plugin:rtl-friendly/recommended",
-	],
+  plugins: ['rtl-friendly'],
+  // extend our recommended config
+  extends: ['plugin:rtl-friendly/recommended'],
   // or add the rules you want to use
-	rules: {
-		"rtl-friendly/no-physical-properties": "warn",
-	},
+  rules: {
+    'rtl-friendly/no-physical-properties': 'warn',
+  },
   // ...
 };
 ```
