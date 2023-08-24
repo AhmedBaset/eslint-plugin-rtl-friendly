@@ -1,4 +1,7 @@
-export const logicalProperties = [
+export const logicalProperties: {
+  physical: string;
+  logical: string;
+}[] = [
   {
     physical: 'ml-',
     logical: 'ms-',
@@ -46,5 +49,37 @@ export const logicalProperties = [
   {
     physical: 'rounded-r-',
     logical: 'rounded-e-',
+  },
+  {
+    physical: 'rounded-tl-',
+    logical: 'rounded-ss-',
+  },
+  {
+    physical: 'rounded-tr-',
+    logical: 'rounded-se-',
+  },
+  {
+    physical: 'rounded-bl-',
+    logical: 'rounded-es-',
+  },
+  {
+    physical: 'rounded-br-',
+    logical: 'rounded-ee-',
+  },
+  {
+    physical: 'scroll-ml-',
+    logical: 'scroll-ms-',
+  },
+  {
+    physical: 'scroll-mr-',
+    logical: 'scroll-me-',
+  },
+  {
+    physical: 'scroll-pl-',
+    logical: 'scroll-ps-',
+  },
+  {
+    physical: 'scroll-pr-',
+    logical: 'scroll-pe-',
   },
 ];
