@@ -143,6 +143,7 @@ Welcome your contribution!
 ## TODO:
 
 - [x] Tailwindcss physical properties to logical properties
+- [ ] Add support for advanced className like `cn('pl-2', {...})`[.](https://github.com/francoismassart/eslint-plugin-tailwindcss/blob/6b6c0dd28e123cc118bff83654f951f736fa58e8/lib/rules/no-arbitrary-value.js#L169)
 - [ ] Strict `<html>` to have dir attribute depending on a codition or whatever detecting the language
 - [ ] Strict `<code>` to have `dir="ltr"` to override the parent's direction
 - [ ] in the future maybe throw a warning that `letter-spacing` doesn't work well with RTL languages to disable it in rtl `rtl:***` (NOT SURE)
