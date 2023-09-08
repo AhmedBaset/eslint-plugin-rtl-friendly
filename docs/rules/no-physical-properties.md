@@ -10,13 +10,13 @@ This rule enforces the use of css logical properties instead of physical propert
 ## Examples of incorrect code for this rule:
 
 ```jsx
-<div className="ml-1 mr-2 pl-8 pr-2 left-0 right-12 text-left border-l-2 rounded-l-sm"></div>
+<div className="ml-1 !mr-2 sm:pl-8 hover:pr-2 data-[state=active]:left-0 right-12 text-left border-l-2 rounded-l-sm"></div>
 ```
 
 ## Examples of correct code for this rule:
 
 ```jsx
-<div className="ms-1 me-2 ps-8 pe-2 start-0 end-12 text-start border-s-2 rounded-s-sm"></div>
+<div className="ms-1 !me-2 sm:ps-8 hover:pe-2 data-[state=active]:start-0 end-12 text-start border-s-2 rounded-s-sm"></div>
 ```
 
 ## To automatically fix all of the problems reported by this rule
