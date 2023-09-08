@@ -2,6 +2,11 @@ import { Rule } from 'eslint';
 import { logicalProperties } from '../configs/tw-logical-properties';
 import { JSXAttribute } from 'estree-jsx';
 
+/**
+ * **TODO** Refactor this ugly code
+ * **TODO** Add support for `className={cn('ms-1', 'me-2')}`
+ */
+
 const exampleRule: Rule.RuleModule = {
   meta: {
     type: 'suggestion',
@@ -42,7 +47,17 @@ const ruleListener = (ctx: Rule.RuleContext) => {
     const PH_CNs = logicalProperties.map((c) => c.physical);
 
     const conflictClassNames = cnArr.filter((cn) =>
-      PH_CNs.some((c) => cn.startsWith(c))
+      PH_CNs.some((c) => {
+        let isValid = false;
+        [
+          new RegExp(`^${c}.*`),
+          new RegExp(`!${c}.*`),
+          new RegExp(`.+${c}.*`),
+        ].forEach((regex) => {
+          if (regex.test(cn)) isValid = true;
+        });
+        return isValid;
+      })
     );
 
     if (!conflictClassNames.length) return;
@@ -54,10 +69,19 @@ const ruleListener = (ctx: Rule.RuleContext) => {
         invalid: conflictClassNames.join(' '),
         valid: conflictClassNames
           .map((cn) => {
-            const { logical, physical } = logicalProperties.find((c) =>
-              cn.startsWith(c.physical)
-            )!;
-            return cn.replace(physical, logical);
+            const prop = logicalProperties.find((c) => {
+              let isValid = false;
+              [
+                new RegExp(`^${c.physical}.*`),
+                new RegExp(`!${c.physical}.*`),
+                new RegExp(`.+${c.physical}.*`),
+              ].forEach((regex) => {
+                if (regex.test(cn)) isValid = true;
+              });
+              return isValid;
+            });
+            if (!prop) return cn;
+            return cn.replace(prop.physical, prop.logical);
           })
           .join(' '),
       },
@@ -66,10 +90,19 @@ const ruleListener = (ctx: Rule.RuleContext) => {
         const fixedClassName = cnArr
           .map((cn) => {
             if (conflictClassNames.includes(cn)) {
-              const { logical, physical } = logicalProperties.find((c) =>
-                cn.startsWith(c.physical)
-              )!;
-              return cn.replace(physical, logical);
+              const prop = logicalProperties.find((c) => {
+                let isValid = false;
+                [
+                  new RegExp(`^${c.physical}.*`),
+                  new RegExp(`!${c.physical}.*`),
+                  new RegExp(`.+${c.physical}.*`),
+                ].forEach((regex) => {
+                  if (regex.test(cn)) isValid = true;
+                });
+                return isValid;
+              });
+              if (!prop) return cn;
+              return cn.replace(prop.physical, prop.logical);
             }
             return cn;
           })
