@@ -27,6 +27,10 @@ tester.run('no-physical-properties', logicalProperties, {
       name: 'should work well with the prefixes flag',
       code: `<div className="sm:ms-1 md:me-2 lg:ps-8 xl:pe-2 hover:start-0 group-hover:end-12 @sm:text-start [&>svg]:border-s-2 data-[state=active]:rounded-e-sm supports-[display:flex]:scroll-ms-4 has-[.block]:scroll-pe-4 aria-[hidden]:!important">text</div>`,
     },
+    {
+      name: 'should work well with modifiers and negative values',
+      code: '<div className="-ps-4 md:-ps-5"></div>'
+    }
   ],
   invalid: [
     {
@@ -105,6 +109,18 @@ tester.run('no-physical-properties', logicalProperties, {
       name: 'should report if physical properties are used with important flag and modifiers and fix them',
       code: `<div className="md:!pl-0 hover:!mr-[23]">text</div>`,
       output: `<div className="md:!ps-0 hover:!me-[23]">text</div>`,
+      errors: [{ messageId: 'noPhysicalProperties' }],
+    },
+    {
+      name: 'should report if physical properties are used with negative values and fix them',
+      code: `<div className="-ml-1 -mr-2 -pl-1 -pr-1">text</div>`,
+      output: `<div className="-ms-1 -me-2 -ps-1 -pe-1">text</div>`,
+      errors: [{ messageId: 'noPhysicalProperties' }],
+    },
+    {
+      name: 'should report if physical properties are used with modifiers and negative values and fix them',
+      code: `<div className="sm:-ml-1 md:-mr-2 lg:-pl-1 xl:-pr-1">text</div>`,
+      output: `<div className="sm:-ms-1 md:-me-2 lg:-ps-1 xl:-pe-1">text</div>`,
       errors: [{ messageId: 'noPhysicalProperties' }],
     },
   ],
