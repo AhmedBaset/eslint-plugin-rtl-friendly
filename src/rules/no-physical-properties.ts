@@ -52,7 +52,9 @@ const ruleListener = (ctx: Rule.RuleContext) => {
         [
           new RegExp(`^${c}.*`),
           new RegExp(`!${c}.*`),
+          new RegExp(`-${c}.*`),
           new RegExp(`.+:${c}.*`),
+          new RegExp(`.+:-${c}.*`),
         ].forEach((regex) => {
           if (regex.test(cn)) isValid = true;
         });
@@ -74,7 +76,9 @@ const ruleListener = (ctx: Rule.RuleContext) => {
               [
                 new RegExp(`^${c.physical}.*`),
                 new RegExp(`!${c.physical}.*`),
+                new RegExp(`-${c.physical}.*`),
                 new RegExp(`.+:${c.physical}.*`),
+                new RegExp(`.+:-${c.physical}.*`),
               ].forEach((regex) => {
                 if (regex.test(cn)) isValid = true;
               });
@@ -95,7 +99,9 @@ const ruleListener = (ctx: Rule.RuleContext) => {
                 [
                   new RegExp(`^${c.physical}.*`),
                   new RegExp(`!${c.physical}.*`),
+                  new RegExp(`-${c.physical}.*`),
                   new RegExp(`.+:${c.physical}.*`),
+                  new RegExp(`.+:-${c.physical}.*`),
                 ].forEach((regex) => {
                   if (regex.test(cn)) isValid = true;
                 });
