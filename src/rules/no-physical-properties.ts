@@ -7,6 +7,14 @@ import { JSXAttribute } from 'estree-jsx';
  * **TODO** Add support for `className={cn('ms-1', 'me-2')}`
  */
 
+const regexes = (physical: string ) => [
+  new RegExp(`^${physical}.*`),
+  new RegExp(`^!${physical}.*`),
+  new RegExp(`^-${physical}.*`),
+  new RegExp(`^.+:${physical}.*`),
+  new RegExp(`^.+:-${physical}.*`),
+];
+
 const exampleRule: Rule.RuleModule = {
   meta: {
     type: 'suggestion',
@@ -49,13 +57,7 @@ const ruleListener = (ctx: Rule.RuleContext) => {
     const conflictClassNames = cnArr.filter((cn) =>
       PH_CNs.some((c) => {
         let isValid = false;
-        [
-          new RegExp(`^${c}.*`),
-          new RegExp(`!${c}.*`),
-          new RegExp(`-${c}.*`),
-          new RegExp(`.+:${c}.*`),
-          new RegExp(`.+:-${c}.*`),
-        ].forEach((regex) => {
+        regexes(c).forEach((regex) => {
           if (regex.test(cn)) isValid = true;
         });
         return isValid;
@@ -73,13 +75,7 @@ const ruleListener = (ctx: Rule.RuleContext) => {
           .map((cn) => {
             const prop = logicalProperties.find((c) => {
               let isValid = false;
-              [
-                new RegExp(`^${c.physical}.*`),
-                new RegExp(`!${c.physical}.*`),
-                new RegExp(`-${c.physical}.*`),
-                new RegExp(`.+:${c.physical}.*`),
-                new RegExp(`.+:-${c.physical}.*`),
-              ].forEach((regex) => {
+              regexes(c.physical).forEach((regex) => {
                 if (regex.test(cn)) isValid = true;
               });
               return isValid;
@@ -96,13 +92,7 @@ const ruleListener = (ctx: Rule.RuleContext) => {
             if (conflictClassNames.includes(cn)) {
               const prop = logicalProperties.find((c) => {
                 let isValid = false;
-                [
-                  new RegExp(`^${c.physical}.*`),
-                  new RegExp(`!${c.physical}.*`),
-                  new RegExp(`-${c.physical}.*`),
-                  new RegExp(`.+:${c.physical}.*`),
-                  new RegExp(`.+:-${c.physical}.*`),
-                ].forEach((regex) => {
+                regexes(c.physical).forEach((regex) => {
                   if (regex.test(cn)) isValid = true;
                 });
                 return isValid;
