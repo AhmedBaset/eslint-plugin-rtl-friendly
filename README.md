@@ -116,8 +116,6 @@ module.exports = {
 };
 ```
 
-See [next.js example](./examples/next.js/.eslintrc.js)
-
 See also [Configuring ESLint](https://eslint.org/docs/user-guide/configuring).
 
 ## Configs
