@@ -13,6 +13,8 @@ const regexes = (physical: string) => [
   new RegExp(`^-${physical}.*`),
   new RegExp(`^.+:${physical}.*`),
   new RegExp(`^.+:-${physical}.*`),
+  new RegExp(`^.+:!${physical}.*`),
+  new RegExp(`^.+:!-${physical}.*`),
 ];
 
 const exampleRule: Rule.RuleModule = {
