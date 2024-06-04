@@ -24,7 +24,7 @@ tester.run("no-physical-properties", logicalProperties, {
       code: `<div className="!ms-1 !me-2 !ps-8 !pe-2 !start-0 !end-12 !text-start !border-s-2 !rounded-e-sm !scroll-ms-4 !scroll-pe-4 !!important">text</div>`,
     },
     {
-      name: "should work well with the prefixes flag",
+      name: "should work well with modifiers",
       code: `<div className="sm:ms-1 md:me-2 lg:ps-8 xl:pe-2 hover:start-0 group-hover:end-12 @sm:text-start [&>svg]:border-s-2 data-[state=active]:rounded-e-sm supports-[display:flex]:scroll-ms-4 has-[.block]:scroll-pe-4 aria-[hidden]:!important">text</div>`,
     },
     {
@@ -87,34 +87,29 @@ tester.run("no-physical-properties", logicalProperties, {
       output: `<div className="scroll-ms-1 scroll-me-2 scroll-ps-1 scroll-pe-1">text</div>`,
       errors: [{ messageId: "noPhysicalProperties" }],
     },
+
     {
-      name: "should report if physical properties are used with the important flag and fix them",
+      name: "should report if physical properties are used with the important flag and fix it",
       code: `<div className="!pl-0">text</div>`,
       output: `<div className="!ps-0">text</div>`,
       errors: [{ messageId: "noPhysicalProperties" }],
     },
     {
       name: "should report if physical properties are used with modifiers and fix them",
-      code: `<div className="sm:ml-1 md:mr-2 lg:pl-1 xl:pr-1">text</div>`,
-      output: `<div className="sm:ms-1 md:me-2 lg:ps-1 xl:pe-1">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
-    },
-    {
-      name: "should report if physical properties are used with modifiers and fix them",
-      code: `<div className="hover:ml-1 focus:mr-2 focus-within:pl-1 @md:pr-1">text</div>`,
-      output: `<div className="hover:ms-1 focus:me-2 focus-within:ps-1 @md:pe-1">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
-    },
-    {
-      name: "should report if physical properties are used with modifiers and fix them",
-      code: `<div className="group-hover:ml-1 data-[state=active]:mr-2 [&>svg]:pl-1 group-[anything]:pr-1">text</div>`,
-      output: `<div className="group-hover:ms-1 data-[state=active]:me-2 [&>svg]:ps-1 group-[anything]:pe-1">text</div>`,
+      code: `<div className="sm:ml-1 md:mr-2 lg:pl-1 xl:pr-1 hover:ml-1 focus:mr-2 focus-within:pl-1 @md:pr-1 group-hover:ml-1 data-[state=active]:mr-2 [&>svg]:pl-1 group-[anything]:pr-1">text</div>`,
+      output: `<div className="sm:ms-1 md:me-2 lg:ps-1 xl:pe-1 hover:ms-1 focus:me-2 focus-within:ps-1 @md:pe-1 group-hover:ms-1 data-[state=active]:me-2 [&>svg]:ps-1 group-[anything]:pe-1">text</div>`,
       errors: [{ messageId: "noPhysicalProperties" }],
     },
     {
       name: "should report if physical properties are used with important flag and modifiers and fix them",
       code: `<div className="md:!pl-0 hover:!mr-[23]">text</div>`,
       output: `<div className="md:!ps-0 hover:!me-[23]">text</div>`,
+      errors: [{ messageId: "noPhysicalProperties" }],
+    },
+    {
+      name: "should report if physical properties are used with important flag, modifiers, and negative prefix and fix them",
+      code: `<div className="md:!-pl-0 hover:!-mr-[23]">text</div>`,
+      output: `<div className="md:!-ps-0 hover:!-me-[23]">text</div>`,
       errors: [{ messageId: "noPhysicalProperties" }],
     },
     {
