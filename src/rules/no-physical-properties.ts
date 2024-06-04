@@ -1,13 +1,13 @@
-import { Rule } from 'eslint';
-import { logicalProperties } from '../configs/tw-logical-properties';
-import { JSXAttribute } from 'estree-jsx';
+import { Rule } from "eslint";
+import { JSXAttribute } from "estree-jsx";
+import { logicalProperties } from "../configs/tw-logical-properties";
 
 /**
  * **TODO** Refactor this ugly code
  * **TODO** Add support for `className={cn('ms-1', 'me-2')}`
  */
 
-const regexes = (physical: string ) => [
+const regexes = (physical: string) => [
   new RegExp(`^${physical}.*`),
   new RegExp(`^!${physical}.*`),
   new RegExp(`^-${physical}.*`),
@@ -17,12 +17,12 @@ const regexes = (physical: string ) => [
 
 const exampleRule: Rule.RuleModule = {
   meta: {
-    type: 'suggestion',
+    type: "suggestion",
     docs: {
-      description: 'Encourage the use of RTL-friendly styles',
+      description: "Encourage the use of RTL-friendly styles",
       recommended: true,
     },
-    fixable: 'code',
+    fixable: "code",
     messages: {
       noPhysicalProperties: `Don't use physical properties like "{{ invalid }}" Use logical properties like "{{ valid }}" instead`,
     },
@@ -39,17 +39,17 @@ export default exampleRule;
 const ruleListener = (ctx: Rule.RuleContext) => {
   const jsxAttribute = (node: JSXAttribute) => {
     let attr: string;
-    if (typeof node.name.name === 'string') attr = node.name.name;
+    if (typeof node.name.name === "string") attr = node.name.name;
     else attr = node.name.name.name;
 
-    const isClassAttribute = ['className', 'class'].includes(attr);
+    const isClassAttribute = ["className", "class"].includes(attr);
     if (!isClassAttribute) return;
 
-    if (node.value?.type !== 'Literal') return;
+    if (node.value?.type !== "Literal") return;
 
     // This can be string | number | boolean | null but className doesn't accept anything but string
     const value = node.value.value as string;
-    const cnArr = value.split(' ');
+    const cnArr = value.split(" ");
 
     // PH = Physical, LG = Logical
     const PH_CNs = logicalProperties.map((c) => c.physical);
@@ -68,9 +68,9 @@ const ruleListener = (ctx: Rule.RuleContext) => {
 
     ctx.report({
       node,
-      messageId: 'noPhysicalProperties',
+      messageId: "noPhysicalProperties",
       data: {
-        invalid: conflictClassNames.join(' '),
+        invalid: conflictClassNames.join(" "),
         valid: conflictClassNames
           .map((cn) => {
             const prop = logicalProperties.find((c) => {
@@ -83,7 +83,7 @@ const ruleListener = (ctx: Rule.RuleContext) => {
             if (!prop) return cn;
             return cn.replace(prop.physical, prop.logical);
           })
-          .join(' '),
+          .join(" "),
       },
 
       fix: (fixer) => {
@@ -102,7 +102,7 @@ const ruleListener = (ctx: Rule.RuleContext) => {
             }
             return cn;
           })
-          .join(' ');
+          .join(" ");
 
         return fixer.replaceText(node, `${attr}="${fixedClassName}"`);
       },
