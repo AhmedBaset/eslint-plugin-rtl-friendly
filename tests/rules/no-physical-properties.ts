@@ -2,10 +2,14 @@ import { RuleTester } from "eslint";
 import logicalProperties from "../../src/rules/no-physical-properties";
 
 const tester = new RuleTester({
-  parserOptions: {
+  languageOptions: {
     ecmaVersion: 6,
     sourceType: "module",
-    ecmaFeatures: { jsx: true },
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      }
+    }
   },
 });
 

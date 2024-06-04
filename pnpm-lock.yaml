@@ -21,8 +21,8 @@ importers:
         specifier: ^9.0.4
         version: 9.0.4(semantic-release@21.1.1(typescript@5.4.5))
       '@types/eslint':
-        specifier: ^8.44.2
-        version: 8.44.2
+        specifier: ^8.56.10
+        version: 8.56.10
       '@types/estree-jsx':
         specifier: ^1.0.0
         version: 1.0.0
@@ -811,8 +811,8 @@ packages:
   '@types/babel__traverse@7.20.1':
     resolution: {integrity: sha512-MitHFXnhtgwsGZWtT68URpOvLN4EREih1u3QtQiN4VdAxWKRVvGCSvw/Qth0M0Qq3pJpnGOu5JaM/ydK7OGbqg==}
 
-  '@types/eslint@8.44.2':
-    resolution: {integrity: sha512-sdPRb9K6iL5XZOmBubg8yiFp5yS/JdUDQsq5e6h95km91MCYMuvp7mh1fjPEYUhvHepKpZOjnEaMBR4PxjWDzg==}
+  '@types/eslint@8.56.10':
+    resolution: {integrity: sha512-Shavhk87gCtY2fhXDctcfS3e6FdxWkCx1iUZ9eEUbh7rTqlZT0/IzOkCOVt0fCjcFuZ9FPYfuezTBImfHCDBGQ==}
 
   '@types/estree-jsx@1.0.0':
     resolution: {integrity: sha512-3qvGd0z8F2ENTGr/GG1yViqfiKmRfrXVx5sJyHGFu3z7m5g5utCQtGp/g29JnjflhtQJBv1WDQukHiT58xPcYQ==}
@@ -4297,7 +4297,7 @@ snapshots:
     dependencies:
       '@babel/types': 7.22.11
 
-  '@types/eslint@8.44.2':
+  '@types/eslint@8.56.10':
     dependencies:
       '@types/estree': 1.0.1
       '@types/json-schema': 7.0.12
