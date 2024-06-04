@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "ignore": [".next", ".turbo", "certificates"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "formatWithErrors": false
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": false,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "trailingCommas": "es5"
+    }
+  }
+}
