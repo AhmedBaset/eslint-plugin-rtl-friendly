@@ -1,9 +1,9 @@
-import path from 'path';
-import { pluginId } from './plugin-id';
-import { readdirSync } from 'fs';
-const rootDir = path.resolve(__dirname, '../../src/rules/');
+import { readdirSync } from "fs";
+import path from "path";
+import { pluginId } from "./plugin-id";
+const rootDir = path.resolve(__dirname, "../../src/rules/");
 
-type RuleType = 'suggestion' | 'problem' | 'layout';
+type RuleType = "suggestion" | "problem" | "layout";
 
 export type RuleInfo = {
   filePath: string;
@@ -47,7 +47,7 @@ export const rules: RuleInfo[] = rulesDirContent
   })
   .filter<RuleInfo>((rule): rule is RuleInfo => Boolean(rule));
 
-const ruleTypes: RuleType[] = ['suggestion', 'problem', 'layout'];
+const ruleTypes: RuleType[] = ["suggestion", "problem", "layout"];
 
 export const categories: CategoryInfo[] = ruleTypes.map(
   (id): CategoryInfo => ({

@@ -1,7 +1,7 @@
-import path from 'path';
-import { pluginId } from './lib/plugin-id';
-import { existsSync } from 'fs';
-import { writeFile } from 'fs/promises';
+import { existsSync } from "fs";
+import path from "path";
+import { writeFile } from "fs/promises";
+import { pluginId } from "./lib/plugin-id";
 
 const addRule = async () => {
   const ruleId = process.argv[2];
@@ -9,7 +9,7 @@ const addRule = async () => {
 
   // Require rule ID.
   if (!ruleId) {
-    console.error('Usage: npm run add-rule <RULE_ID> <RULE_TYPE>');
+    console.error("Usage: npm run add-rule <RULE_ID> <RULE_TYPE>");
     process.exitCode = 1;
     return;
   }
@@ -17,21 +17,21 @@ const addRule = async () => {
   // Require rule type.
   if (!type) {
     console.error(
-      'Usage: npm run add-rule <RULE_ID> <RULE_TYPE> \n\npossible <RULE_TYPE>: problem | suggestion | layout'
+      "Usage: npm run add-rule <RULE_ID> <RULE_TYPE> \n\npossible <RULE_TYPE>: problem | suggestion | layout"
     );
     process.exitCode = 1;
     return;
   }
 
-  const docPath = path.resolve(__dirname, '../docs/rules', `${ruleId}.md`);
-  const rulePath = path.resolve(__dirname, '../src/rules', `${ruleId}.ts`);
-  const testPath = path.resolve(__dirname, '../tests/rules', `${ruleId}.ts`);
+  const docPath = path.resolve(__dirname, "../docs/rules", `${ruleId}.md`);
+  const rulePath = path.resolve(__dirname, "../src/rules", `${ruleId}.ts`);
+  const testPath = path.resolve(__dirname, "../tests/rules", `${ruleId}.ts`);
 
   // Overwrite check.
   for (const filePath of [docPath, rulePath, testPath]) {
     if (existsSync(filePath)) {
       console.error(
-        '%o has existed already.',
+        "%o has existed already.",
         path.relative(process.cwd(), filePath)
       );
       process.exitCode = 1;

@@ -1,9 +1,9 @@
-import pkg from '../../package.json';
+import pkg from "../../package.json";
 const name: string = pkg.name;
 let pluginId = name;
 
-if (name.startsWith('eslint-plugin-')) {
-  pluginId = name.slice('eslint-plugin-'.length);
+if (name.startsWith("eslint-plugin-")) {
+  pluginId = name.slice("eslint-plugin-".length);
 } else {
   const match = name.match(/^(@.+)\/eslint-plugin(?:-(.+))?$/);
 
