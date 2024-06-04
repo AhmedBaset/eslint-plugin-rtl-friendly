@@ -15,10 +15,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm run test
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: CI-check
+        run: pnpm run test
+
       - run: npm run build
       - run: npx semantic-release
         env:
