@@ -1,6 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+  "extends": ["config:recommended"],
+  "addLabels": ["bot"],
+  "configMigration": true,
+  "ignoreDeps": ["@types/node"],
+  "rangeStrategy": "bump",
+  "commitBody": "Co-authored-by: Ahmed Abdelbaset <A7med3bdulBaset@gmail.com>"
 }
