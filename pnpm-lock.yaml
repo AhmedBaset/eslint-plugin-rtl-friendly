@@ -25,7 +25,7 @@ importers:
         version: 8.56.10
       '@types/estree-jsx':
         specifier: ^1.0.0
-        version: 1.0.0
+        version: 1.0.5
       '@types/jest':
         specifier: ^29.5.4
         version: 29.5.4
@@ -814,11 +814,14 @@ packages:
   '@types/eslint@8.56.10':
     resolution: {integrity: sha512-Shavhk87gCtY2fhXDctcfS3e6FdxWkCx1iUZ9eEUbh7rTqlZT0/IzOkCOVt0fCjcFuZ9FPYfuezTBImfHCDBGQ==}
 
-  '@types/estree-jsx@1.0.0':
-    resolution: {integrity: sha512-3qvGd0z8F2ENTGr/GG1yViqfiKmRfrXVx5sJyHGFu3z7m5g5utCQtGp/g29JnjflhtQJBv1WDQukHiT58xPcYQ==}
+  '@types/estree-jsx@1.0.5':
+    resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
 
   '@types/estree@1.0.1':
     resolution: {integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==}
+
+  '@types/estree@1.0.5':
+    resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
 
   '@types/graceful-fs@4.1.6':
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
@@ -4305,11 +4308,13 @@ snapshots:
       '@types/estree': 1.0.1
       '@types/json-schema': 7.0.12
 
-  '@types/estree-jsx@1.0.0':
+  '@types/estree-jsx@1.0.5':
     dependencies:
-      '@types/estree': 1.0.1
+      '@types/estree': 1.0.5
 
   '@types/estree@1.0.1': {}
+
+  '@types/estree@1.0.5': {}
 
   '@types/graceful-fs@4.1.6':
     dependencies:
