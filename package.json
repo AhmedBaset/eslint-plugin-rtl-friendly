@@ -33,7 +33,7 @@
     "@biomejs/biome": "^1.8.0",
     "@eslint/js": "9",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^9.0.4",
+    "@semantic-release/github": "^10.0.6",
     "@types/eslint": "^8.56.10",
     "@types/estree-jsx": "^1.0.0",
     "@types/jest": "^29.5.4",
