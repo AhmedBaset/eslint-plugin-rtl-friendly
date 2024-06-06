@@ -8,8 +8,8 @@ const tester = new RuleTester({
     parserOptions: {
       ecmaFeatures: {
         jsx: true,
-      }
-    }
+      },
+    },
   },
 });
 
@@ -34,6 +34,10 @@ tester.run("no-physical-properties", logicalProperties, {
     {
       name: "should work well with modifiers and negative values",
       code: '<div className="-ps-4 md:-ps-5"></div>',
+    },
+    {
+      name: "should work well with stacked modifiers",
+      code: '<div className="dark:md:hover:ps-4"></div>',
     },
   ],
   invalid: [
@@ -126,6 +130,12 @@ tester.run("no-physical-properties", logicalProperties, {
       name: "should report if physical properties are used with modifiers and negative values and fix them",
       code: `<div className="sm:-ml-1 md:-mr-2 lg:-pl-1 xl:-pr-1">text</div>`,
       output: `<div className="sm:-ms-1 md:-me-2 lg:-ps-1 xl:-pe-1">text</div>`,
+      errors: [{ messageId: "noPhysicalProperties" }],
+    },
+    {
+      name: "should report if physical properties are used with stacked modifiers",
+      code: '<div className="dark:md:hover:pl-4"></div>',
+      output: '<div className="dark:md:hover:ps-4"></div>',
       errors: [{ messageId: "noPhysicalProperties" }],
     },
   ],

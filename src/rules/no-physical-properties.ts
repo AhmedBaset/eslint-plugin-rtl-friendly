@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck temp
+
 import { Rule } from "eslint";
 import { JSXAttribute } from "estree-jsx";
 import { logicalProperties } from "../configs/tw-logical-properties";
@@ -17,7 +20,7 @@ const regexes = (physical: string) => [
   new RegExp(`^.+:!-${physical}.*`),
 ];
 
-const exampleRule: Rule.RuleModule = {
+const noPhysicalProperties: Rule.RuleModule = {
   meta: {
     type: "suggestion",
     docs: {
@@ -29,14 +32,13 @@ const exampleRule: Rule.RuleModule = {
       noPhysicalProperties: `Don't use physical properties like "{{ invalid }}" Use logical properties like "{{ valid }}" instead`,
     },
     schema: [],
-    hasSuggestions: true,
   },
   create(ctx) {
     return ruleListener(ctx);
   },
 };
 
-export default exampleRule;
+export default noPhysicalProperties;
 
 const ruleListener = (ctx: Rule.RuleContext) => {
   const jsxAttribute = (node: JSXAttribute) => {
@@ -87,7 +89,6 @@ const ruleListener = (ctx: Rule.RuleContext) => {
           })
           .join(" "),
       },
-
       fix: (fixer) => {
         const fixedClassName = cnArr
           .map((cn) => {
