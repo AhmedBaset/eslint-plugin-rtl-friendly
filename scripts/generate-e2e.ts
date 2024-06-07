@@ -4,7 +4,6 @@ import { logicalProperties } from "../src/configs/tw-logical-properties";
 import path from "path";
 
 const modifiers = [
-  "md",
   "dark",
   "dark:md:hover",
   "@md",
@@ -13,7 +12,9 @@ const modifiers = [
   "[&>svg]",
   "data-[state=active]",
   "aria-[hidden]",
-  "group-hover/name"
+  "group-hover/name",
+  "group-[:nth-of-type(3)_&]",
+  "*"
 ];
 
 let valid = "<h2>Valid</h2>\n";
