@@ -11,7 +11,7 @@ export default config(
   {
     ignores: ["dist/**/*"],
   },
-  { 
+  {
     languageOptions: {
       globals: globals.node,
     },
