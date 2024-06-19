@@ -1,5 +1,5 @@
 import { Rule } from "eslint";
-import { logicalProperties } from "../configs/tw-logical-properties.js";
+import { logicalProperties } from "../configs/tw-logical-properties";
 
 import * as ESTree from "estree";
 import type { JSXAttribute } from "estree-jsx";
