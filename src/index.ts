@@ -3,9 +3,7 @@ import type { ESLint, Linter } from "eslint";
 import noPhysicalProperties from "./rules/no-physical-properties.js";
 
 import { createRequire } from "module";
-const pkg = createRequire(import.meta.url)(
-  "../package.json"
-) as typeof import("../package.json");
+const pkg = createRequire(import.meta.url)("../package.json");
 
 const rtlFriendly = {
   meta: {

@@ -34,12 +34,13 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "release": "semantic-release",
-    "add-rule": "ts-node scripts/add-rule",
-    "update": "ts-node scripts/update",
-    "prepublishOnly": "npm run build"
+    "add-rule": "tsx scripts/add-rule",
+    "update": "tsx scripts/update",
+    "prepublishOnly": "npm run build",
+    "gen-e2e": "tsx scripts/generate-e2e"
   },
   "peerDependencies": {
-    "eslint": ">=5.16.0",
+    "eslint": ">=8.0.0",
     "tailwindcss": ">=3.3.0"
   },
   "devDependencies": {
