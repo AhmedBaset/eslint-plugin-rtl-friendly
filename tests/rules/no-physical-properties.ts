@@ -39,6 +39,10 @@ tester.run("no-physical-properties", logicalProperties, {
       name: "should work well with stacked modifiers",
       code: '<div className="dark:md:hover:ps-4"></div>',
     },
+    {
+      name: "should work well with : in the modifier",
+      code: '<div className="group-[:nth-of-type(3)_&]:ps-4"></div>',
+    },
   ],
   invalid: [
     {
@@ -136,6 +140,12 @@ tester.run("no-physical-properties", logicalProperties, {
       name: "should report if physical properties are used with stacked modifiers",
       code: '<div className="dark:md:hover:pl-4"></div>',
       output: '<div className="dark:md:hover:ps-4"></div>',
+      errors: [{ messageId: "noPhysicalProperties" }],
+    },
+    {
+      name: "should report if physical properties are used with : in the modifier",
+      code: '<div className="group-[:nth-of-type(3)_&]:pl-4"></div>',
+      output: '<div className="group-[:nth-of-type(3)_&]:ps-4"></div>',
       errors: [{ messageId: "noPhysicalProperties" }],
     },
   ],
