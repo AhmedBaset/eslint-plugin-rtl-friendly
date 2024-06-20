@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-rtl-friendly",
-  "version": "0.3.1-1",
+  "version": "0.3.0-rc",
   "description": "Encourage the use of RTL-friendly styles",
   "author": {
     "name": "Ahmed Abdelbaset",
