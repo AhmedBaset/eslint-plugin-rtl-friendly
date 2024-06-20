@@ -10,6 +10,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -24,9 +25,8 @@
   ],
   "scripts": {
     "type:check": "tsc --noEmit",
-    "build": "tsc -b",
-    "clean": "tsc -b --clean",
-    "postclean": "rm -rf dist",
+    "build": "tsup",
+    "clean": "rm -rf dist",
     "format": "biome check . --write",
     "lint": "eslint .",
     "format:check": "biome check .",
@@ -59,6 +59,7 @@
     "jest": "^29.6.4",
     "tailwindcss": "~3.3.3",
     "ts-jest": "^29.1.1",
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.12.0"
   },
