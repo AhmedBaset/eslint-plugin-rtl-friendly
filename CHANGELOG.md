@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+- Support `className={"..."}` and backticks in curly braces {`...`}
 
 ## [0.2.0] - 2023-09-08
 

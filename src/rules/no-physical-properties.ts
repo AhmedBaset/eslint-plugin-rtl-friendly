@@ -1,13 +1,9 @@
+/* eslint-disable */
 import { Rule } from "eslint";
 import { logicalProperties } from "../configs/tw-logical-properties.js";
 
 import * as ESTree from "estree";
 import type { JSXAttribute } from "estree-jsx";
-
-/**
- * **TODO** Refactor this ugly code
- * **TODO** Add support for `className={cn('ms-1', 'me-2')}`
- */
 
 const regexes = (physical: string) => [
   new RegExp(`^${physical}.*`),
@@ -28,7 +24,7 @@ const noPhysicalProperties: Rule.RuleModule = {
     },
     fixable: "code",
     messages: {
-      noPhysicalProperties: `Don't use physical properties like "{{ invalid }}" Use logical properties like "{{ valid }}" instead`,
+      noPhysicalProperties: `Avoid using physical properties such as "{{ invalid }}". Instead, use logical properties like "{{ valid }}" for better RTL support.`,
     },
     schema: [],
   },
@@ -36,17 +32,36 @@ const noPhysicalProperties: Rule.RuleModule = {
     return {
       JSXAttribute: (_node: ESTree.Node) => {
         const node = _node as JSXAttribute;
-        let attr: string;
-        if (typeof node.name.name === "string") attr = node.name.name;
-        else attr = node.name.name.name;
+
+        if (node.name.type !== "JSXIdentifier") return;
+        const attr = node.name.name;
 
         const isClassAttribute = ["className", "class"].includes(attr);
         if (!isClassAttribute) return;
 
-        if (node.value?.type !== "Literal") return;
+        const valueType = node.value?.type;
+        let value = "" as any;
+        if (valueType === "Literal") value = node.value?.value;
+        else if (valueType === "JSXExpressionContainer") {
+          const expression = node.value?.expression;
+          if (expression?.type === "Literal") {
+            value = expression.value;
+          } else if (expression?.type === "TemplateLiteral") {
+            value = expression.quasis[0].value.raw;
+          } else if (expression?.type === "CallExpression") {
+            // TODO: Handle functions
+            // const callee = expression.callee;
+            // if (callee?.type === "Identifier" && callee.name === "cn") {
+            //   const args = expression.arguments;
+            //   if (args.length === 1) {
+            //     const arg = args[0];
+            //     if (arg.type === "Literal") v1 = arg.value as string;
+            //   }
+            // }
+          }
+        }
+        if (typeof value !== "string") return;
 
-        // This can be string | number | boolean | null but className doesn't accept anything but string
-        const value = node.value.value as string;
         const cnArr = value.split(" ");
 
         // PH = Physical, LG = Logical
