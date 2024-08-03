@@ -1,7 +1,7 @@
 import { RuleTester } from "eslint";
-import logicalProperties, {
+import noPhysicalProperties, {
   NO_PHYSICAL_CLASSESS,
-} from "../../src/rules/no-physical-properties";
+} from "./../no-physical-properties";
 
 const tester = new RuleTester({
   languageOptions: {
@@ -15,7 +15,7 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("no-physical-properties", logicalProperties, {
+tester.run("no-physical-properties", noPhysicalProperties, {
   valid: [
     {
       name: "should not report if logical properties are used",
