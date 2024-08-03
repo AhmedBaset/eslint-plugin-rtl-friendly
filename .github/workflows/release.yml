@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - develop
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - run: |
+          git config --global user.email "82659015+AhmedBaset@users.noreply.github.com"
+          git config --global user.name "Ahmed Abdelbaset"
+          git add .
+
+          
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          commit: "release: 📦 version packages"
+          title: "release: 📦  version packages"
+          publish: npm publish ./packages/eslint-config --access public
+          setupGitUser: false
+          createGithubReleases: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
