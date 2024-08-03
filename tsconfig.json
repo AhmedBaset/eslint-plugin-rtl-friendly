@@ -9,7 +9,6 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "lib": ["ES2021"],
-    // "noImplicitReturns": true,
     "module": "ES2022",
     "moduleResolution": "Bundler",
     "pretty": true,
