@@ -1,9 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "addLabels": ["bot"],
+  "extends": [
+    "config:recommended",
+    "schedule:weekly",
+    ":disablePeerDependencies",
+    ":maintainLockFilesMonthly",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)"
+  ],
   "configMigration": true,
   "ignoreDeps": ["@types/node"],
-  "rangeStrategy": "bump",
+  "postUpdateOptions": ["pnpmDedupe"],
   "commitBody": "Co-authored-by: Ahmed Abdelbaset <A7med3bdulBaset@gmail.com>"
 }
