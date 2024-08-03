@@ -1,5 +1,7 @@
 import { RuleTester } from "eslint";
-import logicalProperties from "../../src/rules/no-physical-properties";
+import logicalProperties, {
+  NO_PHYSICAL_CLASSESS,
+} from "../../src/rules/no-physical-properties";
 
 const tester = new RuleTester({
   languageOptions: {
@@ -43,110 +45,123 @@ tester.run("no-physical-properties", logicalProperties, {
       name: "should work well with : in the modifier",
       code: '<div className="group-[:nth-of-type(3)_&]:ps-4"></div>',
     },
+    {
+      name: "empty class is ok",
+      code: "<div className=\"\" class=''></div>",
+    },
   ],
   invalid: [
     {
       name: "should report when using `className` or `class` attributes",
-      code: `<div className="ml-1 mr-2"><span class="pl-2 pr-2">text</span></div>`,
-      output: `<div className="ms-1 me-2"><span class="ps-2 pe-2">text</span></div>`,
+      code: `<div className="pl-1 mr-2"><span class="pl-2 pr-2">text</span></div>`,
+      output: `<div className="ps-1 me-2"><span class="ps-2 pe-2">text</span></div>`,
       errors: [
-        { messageId: "noPhysicalProperties" },
-        { messageId: "noPhysicalProperties" },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+    },
+    {
+      name: "should keep extra classes as is",
+      code: `<div className="pl-1 extra-class mr-2"><span class="pl-2 extra-class pr-2">text</span></div>`,
+      output: `<div className="ps-1 extra-class me-2"><span class="ps-2 extra-class pe-2">text</span></div>`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
       ],
     },
     {
       name: "should report if physical margin properties are used and fix them",
       code: `<div className="ml-1 mr-2">text</div>`,
       output: `<div className="ms-1 me-2">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical padding properties are used and fix them",
       code: `<div className="pl-1 pr-2">text</div>`,
       output: `<div className="ps-1 pe-2">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if phsical inset properties are used and fix them",
       code: `<div className="left-1 right-2">text</div>`,
       output: `<div className="start-1 end-2">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical text alignment properties are used and fix them",
       code: `<div className="text-left"><span className="text-right">text</span></div>`,
       output: `<div className="text-start"><span className="text-end">text</span></div>`,
       errors: [
-        { messageId: "noPhysicalProperties" },
-        { messageId: "noPhysicalProperties" },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
       ],
     },
     {
       name: "should report if physical border properties are used and fix them",
       code: `<div className="border-l-1 border-r-2">text</div>`,
       output: `<div className="border-s-1 border-e-2">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical border radius properties are used and fix them",
       code: `<div className="rounded-l-1 rounded-r-2 rounded-tl-1 rounded-tr-1 rounded-bl-1 rounded-br-1">text</div>`,
       output: `<div className="rounded-s-1 rounded-e-2 rounded-ss-1 rounded-se-1 rounded-es-1 rounded-ee-1">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical scroll properties are used and fix them",
       code: `<div className="scroll-ml-1 scroll-mr-2 scroll-pl-1 scroll-pr-1">text</div>`,
       output: `<div className="scroll-ms-1 scroll-me-2 scroll-ps-1 scroll-pe-1">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
 
     {
       name: "should report if physical properties are used with the important flag and fix it",
       code: `<div className="!pl-0">text</div>`,
       output: `<div className="!ps-0">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical properties are used with modifiers and fix them",
       code: `<div className="sm:ml-1 md:mr-2 lg:pl-1 xl:pr-1 hover:ml-1 focus:mr-2 focus-within:pl-1 @md:pr-1 group-hover:ml-1 data-[state=active]:mr-2 [&>svg]:pl-1 group-[anything]:pr-1">text</div>`,
       output: `<div className="sm:ms-1 md:me-2 lg:ps-1 xl:pe-1 hover:ms-1 focus:me-2 focus-within:ps-1 @md:pe-1 group-hover:ms-1 data-[state=active]:me-2 [&>svg]:ps-1 group-[anything]:pe-1">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical properties are used with important flag and modifiers and fix them",
       code: `<div className="md:!pl-0 hover:!mr-[23]">text</div>`,
       output: `<div className="md:!ps-0 hover:!me-[23]">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical properties are used with important flag, modifiers, and negative prefix and fix them",
       code: `<div className="md:!-pl-0 hover:!-mr-[23]">text</div>`,
       output: `<div className="md:!-ps-0 hover:!-me-[23]">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical properties are used with negative values and fix them",
       code: `<div className="-ml-1 -mr-2 -pl-1 -pr-1">text</div>`,
       output: `<div className="-ms-1 -me-2 -ps-1 -pe-1">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical properties are used with modifiers and negative values and fix them",
       code: `<div className="sm:-ml-1 md:-mr-2 lg:-pl-1 xl:-pr-1">text</div>`,
       output: `<div className="sm:-ms-1 md:-me-2 lg:-ps-1 xl:-pe-1">text</div>`,
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical properties are used with stacked modifiers",
       code: '<div className="dark:md:hover:pl-4"></div>',
       output: '<div className="dark:md:hover:ps-4"></div>',
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical properties are used with : in the modifier",
       code: '<div className="group-[:nth-of-type(3)_&]:pl-4"></div>',
       output: '<div className="group-[:nth-of-type(3)_&]:ps-4"></div>',
-      errors: [{ messageId: "noPhysicalProperties" }],
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
   ],
 });
