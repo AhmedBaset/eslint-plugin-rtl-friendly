@@ -1,5 +1,7 @@
 import { RuleTester } from "eslint";
-import { noPhysicalProperties, NO_PHYSICAL_CLASSESS } from "./rule";
+import noPhysicalProperties, {
+  NO_PHYSICAL_CLASSESS,
+} from "./../no-physical-properties";
 
 const tester = new RuleTester({
   languageOptions: {
