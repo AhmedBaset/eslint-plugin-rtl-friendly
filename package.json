@@ -1,17 +1,26 @@
 {
   "name": "eslint-plugin-rtl-friendly",
-  "version": "0.3.0-rc",
+  "version": "0.3.0-canary.1",
   "description": "Encourage the use of RTL-friendly styles",
   "author": {
     "name": "Ahmed Abdelbaset",
     "url": "https://twitter.com/A7med3bdulBaset"
   },
   "type": "module",
+  "packageManager": "pnpm@9.4.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "default": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -46,8 +55,6 @@
   "devDependencies": {
     "@biomejs/biome": "^1.8.0",
     "@eslint/js": "9.5.0",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^9.0.4",
     "@types/eslint": "^8.56.10",
     "@types/estree": "^1.0.5",
     "@types/estree-jsx": "^1.0.5",
@@ -79,6 +86,5 @@
   "bugs": {
     "url": "https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/issues"
   },
-  "homepage": "https://github.com/AhmedBaset/eslint-plugin-rtl-friendly#readme",
-  "packageManager": "pnpm@9.4.0"
+  "homepage": "https://github.com/AhmedBaset/eslint-plugin-rtl-friendly#readme"
 }
