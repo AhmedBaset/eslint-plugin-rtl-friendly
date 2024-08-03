@@ -60,7 +60,7 @@ return (
 
 Up to this point, this plugin only reports a warning (with auto-fix) when using tailwindcss physical properties like `pl-*`, `mr-*`, `text-left`, `left-*`, `border-l-*`, `rounded-r-*`, etc. Instead, you should use their logical properties like `ps-*`, `ms-*`, `text-start`, `start-*`, `border-start-*`, `rounded-start-*`, etc. You can read more about [logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Logical_Properties) or [tailwindcss logical properties support](https://tailwindcss.com/blog/tailwindcss-v3-3#simplified-rtl-support-with-logical-properties) or [our documentation](./docs/rules/no-physical-properties.md).
 
-![demo](/assets/vscode-demo.png)
+![demo](/.github/assets/vscode-demo.png)
 
 ## RTL languages:
 
@@ -80,7 +80,7 @@ Up to this point, this plugin only reports a warning (with auto-fix) when using 
 - (yi) Yiddish - ייִדיש
 
 > The orange areas on the map below show where RTL languages are spoken.
-> ![map](/assets/languages-map.png)
+> ![map](/.github/assets/languages-map.png)
 
 ## Installation
 

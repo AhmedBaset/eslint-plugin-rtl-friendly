@@ -15,6 +15,8 @@ const regexes = (physical: string) => [
   new RegExp(`^.+:!-${physical}.*`),
 ];
 
+export const NO_PHYSICAL_CLASSESS = "NO_PHYSICAL_CLASSESS";
+
 const noPhysicalProperties: Rule.RuleModule = {
   meta: {
     type: "suggestion",
@@ -24,7 +26,7 @@ const noPhysicalProperties: Rule.RuleModule = {
     },
     fixable: "code",
     messages: {
-      noPhysicalProperties: `Avoid using physical properties such as "{{ invalid }}". Instead, use logical properties like "{{ valid }}" for better RTL support.`,
+      [NO_PHYSICAL_CLASSESS]: `Avoid using physical properties such as "{{ invalid }}". Instead, use logical properties like "{{ valid }}" for better RTL support.`,
     },
     schema: [],
   },
@@ -81,7 +83,7 @@ const noPhysicalProperties: Rule.RuleModule = {
 
         ctx.report({
           node: _node,
-          messageId: "noPhysicalProperties",
+          messageId: NO_PHYSICAL_CLASSESS,
           data: {
             invalid: conflictClassNames.join(" "),
             valid: conflictClassNames

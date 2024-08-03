@@ -1,36 +1,44 @@
 name: Release
 
 on:
-  workflow_dispatch: 
+  push:
+    branches:
+      - develop
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
-    permissions: 
-      contents: write
-      packages: write
-      pull-requests: write
-      issues: write
-
+    name: Release
+    timeout-minutes: 10
     runs-on: ubuntu-latest
-
+    permissions: write-all
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
 
-      - uses: actions/setup-node@v4
+      - run: |
+          git config --global user.email "82659015+AhmedBaset@users.noreply.github.com"
+          git config --global user.name "Ahmed Abdelbaset"
+          git add .
+
+          
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
         with:
-          node-version: 18
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: CI-check
-        run: pnpm run test
-
-      - run: npm run build
-      - run: npx semantic-release
+          commit: "release: 📦 version packages"
+          title: "release: 📦  version packages"
+          publish: npm publish ./packages/eslint-config --access public
+          setupGitUser: false
+          createGithubReleases: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

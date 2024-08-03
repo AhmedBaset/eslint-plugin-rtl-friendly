@@ -1,7 +1,7 @@
 import { exec } from "child_process";
-import { mkdir, writeFile } from "fs/promises";
-import { logicalProperties } from "../src/configs/tw-logical-properties";
 import path from "path";
+import { mkdir, writeFile } from "fs/promises";
+import { twLogicalClasses } from "../src/utils/tailwind";
 
 const modifiers = [
   "dark",
@@ -14,7 +14,7 @@ const modifiers = [
   "aria-[hidden]",
   "group-hover/name",
   "group-[:nth-of-type(3)_&]",
-  "*"
+  "*",
 ];
 
 let valid = "<h2>Valid</h2>\n";
@@ -39,67 +39,67 @@ let invalidWithModifierAndImportant =
 let invalidWithModifierAndNegativeAndImportant =
   "<h2>Invalid with modifiers, important and negative flags</h2>\n";
 
-for (const { logical } of logicalProperties) {
+for (const { logical } of twLogicalClasses) {
   valid += `<div className="${logical}${logical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { logical } of logicalProperties) {
+for (const { logical } of twLogicalClasses) {
   validWithNegative += `<div className="-${logical}${logical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { logical } of logicalProperties) {
+for (const { logical } of twLogicalClasses) {
   validWithImportant += `<div className="!${logical}${logical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { logical } of logicalProperties) {
+for (const { logical } of twLogicalClasses) {
   const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
   validWithModifier += `<div className="${modifier}:${logical}${logical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { logical } of logicalProperties) {
+for (const { logical } of twLogicalClasses) {
   const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
   validWithModifierAndNegative += `<div className="${modifier}:-${logical}${logical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { logical } of logicalProperties) {
+for (const { logical } of twLogicalClasses) {
   const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
   validWithModifierAndImportant += `<div className="${modifier}:!${logical}${logical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { logical } of logicalProperties) {
+for (const { logical } of twLogicalClasses) {
   const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
   validWithModifierAndNegativeAndImportant += `<div className="${modifier}:!-${logical}${logical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
 // Invalid
-for (const { physical } of logicalProperties) {
+for (const { physical } of twLogicalClasses) {
   invalid += `{/* eslint-disable-next-line rtl-friendly/no-physical-properties */}\n<div className="${physical}${physical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { physical } of logicalProperties) {
+for (const { physical } of twLogicalClasses) {
   invalidWithNegative += `{/* eslint-disable-next-line rtl-friendly/no-physical-properties */}\n<div className="-${physical}${physical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { physical } of logicalProperties) {
+for (const { physical } of twLogicalClasses) {
   invalidWithImportant += `{/* eslint-disable-next-line rtl-friendly/no-physical-properties */}\n<div className="!${physical}${physical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { physical } of logicalProperties) {
+for (const { physical } of twLogicalClasses) {
   const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
   invalidWithModifier += `{/* eslint-disable-next-line rtl-friendly/no-physical-properties */}\n<div className="${modifier}:${physical}${physical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { physical } of logicalProperties) {
+for (const { physical } of twLogicalClasses) {
   const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
   invalidWithModifierAndNegative += `{/* eslint-disable-next-line rtl-friendly/no-physical-properties */}\n<div className="${modifier}:-${physical}${physical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { physical } of logicalProperties) {
+for (const { physical } of twLogicalClasses) {
   const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
   invalidWithModifierAndImportant += `{/* eslint-disable-next-line rtl-friendly/no-physical-properties */}\n<div className="${modifier}:!${physical}${physical.endsWith("-") ? "8" : ""}" />\n`;
 }
 
-for (const { physical } of logicalProperties) {
+for (const { physical } of twLogicalClasses) {
   const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
   invalidWithModifierAndNegativeAndImportant += `{/* eslint-disable-next-line rtl-friendly/no-physical-properties */}\n<div className="${modifier}:!-${physical}${physical.endsWith("-") ? "8" : ""}" />\n`;
 }
@@ -142,4 +142,4 @@ declare const React;
 `
 );
 
-exec("biome check e2e --write")
+exec("biome check e2e --write");
