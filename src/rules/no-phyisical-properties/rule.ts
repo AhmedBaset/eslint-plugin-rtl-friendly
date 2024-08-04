@@ -1,11 +1,14 @@
-import { Rule } from "eslint";
+import { Rule, type AST } from "eslint";
 
 import * as ESTree from "estree";
 import type { JSXAttribute } from "estree-jsx";
-import { extractFromNode } from "../../utils/ast.js";
+import { extractTokenFromNode } from "../../utils/ast.js";
 import { parseForPhysicalClasses } from "../../utils/tailwind.js";
 
-const cache = new Map</** invalid */ string, /** valid */ string>();
+// const cache = new Map<
+//   /** invalid */ string,
+//   /** valid */ string
+// >();
 
 export const NO_PHYSICAL_CLASSESS = "NO_PHYSICAL_CLASSESS";
 
@@ -33,19 +36,23 @@ export const noPhysicalProperties: Rule.RuleModule = {
         const isClassAttribute = ["className", "class"].includes(attr);
         if (!isClassAttribute) return;
 
-        let result = extractFromNode(node);
-        if (!result) return;
+        // let result = extractFromNode(node);
+        // if (!result) return;
 
-        result = result.filter((c) => typeof c === "string");
-        if (!result.length) return;
+        // result = result.filter((c) => typeof c === "string");
+        // if (!result.length) return;
 
-        const classesAsString = result.join(" ");
-        const cachedValid = cache.get(classesAsString);
-        if (cachedValid) {
-          report({ ctx, node, invalid: classesAsString, valid: cachedValid });
-          return;
-        }
+        // const classesAsString = result.join(" ");
+        // const cachedValid = cache.get(classesAsString);
+        // if (cachedValid) {
+        //   console.log("cachedValid", cachedValid);
+        //   report({ ctx, node, invalid: classesAsString, valid: cachedValid });
+        //   return;
+        // }
 
+        const classesAsString = extractTokenFromNode(node, "checker")?.value;
+        if (!classesAsString) return;
+        
         const classes = classesAsString.split(" ");
 
         const parsed = parseForPhysicalClasses(classes);
@@ -56,7 +63,7 @@ export const noPhysicalProperties: Rule.RuleModule = {
         const invalid = parsed.map((p) => p.original).join(" ");
         const valid = parsed.map((p) => p.valid).join(" ");
 
-        cache.set(classesAsString, valid);
+        // cache.set(classesAsString, valid);
         report({ ctx, node, invalid, valid });
       },
     };
@@ -86,10 +93,11 @@ function report({
       end: node.loc!.end,
     },
     fix: (fixer) => {
-      if (node.value?.type === "Literal") {
+      const token = extractTokenFromNode(node, "fixer");
+      if (token?.raw) {
         return fixer.replaceText(
-          node.value,
-          node.value.raw?.replace(invalid, valid) ?? ""
+          token as AST.Token,
+          token.raw?.replace(invalid, valid)
         );
       }
 

@@ -61,6 +61,7 @@
     "@types/estree": "^1.0.5",
     "@types/estree-jsx": "^1.0.5",
     "@types/jest": "^29.5.12",
+    "@types/node": "20",
     "eslint": "^9.8.0",
     "eslint-plugin-eslint-plugin": "^6.2.0",
     "globals": "^15.9.0",
