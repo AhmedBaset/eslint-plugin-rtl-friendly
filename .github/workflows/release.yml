@@ -29,14 +29,13 @@ jobs:
           git config --global user.name "Ahmed Abdelbaset"
           git add .
 
-          
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
           commit: "release: 📦 version packages"
           title: "release: 📦  version packages"
-          publish: npm publish ./packages/eslint-config --access public
+          publish: npm publish --access public
           setupGitUser: false
           createGithubReleases: false
         env:
