@@ -1,6 +1,6 @@
 import type { ESLint, Linter } from "eslint";
-import noPhysicalProperties from "./rules/no-physical-properties.js";
 import pkg from "../package.json";
+import { noPhysicalProperties } from "./rules/no-phyisical-properties/rule";
 
 const rtlFriendly = {
   meta: {
