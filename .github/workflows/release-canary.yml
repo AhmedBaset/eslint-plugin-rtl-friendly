@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  pull_request:
+    types: [labeled]
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    permissions: write-all
+    if: contains(github.event.pull_request.labels.*.name, 'release canary')
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--no-frozen-lockfile]
+
+      - run: |
+          git config --global user.email "82659015+AhmedBaset@users.noreply.github.com"
+          git config --global user.name "Ahmed Abdelbaset"
+          git add .
+
+      - name: Publish a Canary version
+        id: publish
+        run: |
+          pnpm changeset version --snapshot canary
+          pnpm publish --access public --tag canary
+          echo "published=true" >> "$GITHUB_OUTPUT"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+
+
+      - name: Comment on PR
+        if: steps.publish.outputs.published == 'true'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.MY_GITHUB_TOKEN }}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `
+                🚀 Successfully released canary version to npm.
+                You can install it by running:
+                \`\`\`
+                pnpm add eslint-plugin-rtl@canary
+                \`\`\`
+              `.replace(/^\s+|\s+$/g, '')
+            })
