@@ -13,4 +13,4 @@ Previously the plugin only supported literal values like `className="..."`, whic
   - But it only fixes the consequent value
 
 
-Currently, Auto Fixing only works with literal values but it will support all cases in the future
+Currently, Auto Fixing works with only literal values but the goal is to get it to fix all expressions 
