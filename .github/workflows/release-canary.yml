@@ -34,7 +34,7 @@ jobs:
       - name: Publish a Canary version
         id: publish
         run: |
-          pnpm changeset version --snapshot canary
+          pnpm changeset version --snapshot ${{ github.event.number }}
           pnpm publish --access public --tag canary
           echo "published=true" >> "$GITHUB_OUTPUT"
         env:
