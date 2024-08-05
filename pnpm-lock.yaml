@@ -32,6 +32,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      '@types/node':
+        specifier: '20'
+        version: 20.14.14
       eslint:
         specifier: ^9.8.0
         version: 9.8.0

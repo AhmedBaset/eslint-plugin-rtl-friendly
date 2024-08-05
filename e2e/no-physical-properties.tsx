@@ -476,4 +476,9 @@ declare const React;
     {/* eslint-disable-next-line rtl-friendly/no-physical-properties */}
     <div className="*:!-scroll-pr-8" />
   </>
+
+  <>
+    {/* eslint-disable-next-line rtl-friendly/no-physical-properties */}
+    <div className={Math.random() > 0.5 ? "pl-1 text-right mr-2" : "pl-1 text-right mr-2"} />
+  </>
 </>;

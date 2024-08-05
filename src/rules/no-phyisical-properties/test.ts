@@ -47,6 +47,22 @@ tester.run("no-physical-properties", noPhysicalProperties, {
       name: "empty class is ok",
       code: "<div className=\"\" class=''></div>",
     },
+    {
+      name: '{"..."}',
+      code: "<div className={'ps-2'} class={'md:text-start'}></div>",
+    },
+    {
+      name: "{`...`}",
+      code: "<div className={`ps-2`} class={`md:text-start`} />",
+    },
+    {
+      name: '{isCondition && "..."}',
+      code: `<div className={isCondition && "ps-2"} />`,
+    },
+    {
+      name: '{isCondition && "..."}',
+      code: `<div className={isCondition ? "ps-1 text-end me-2" : "pe-1 text-start ms-2"} />`,
+    },
   ],
   invalid: [
     {
@@ -66,6 +82,33 @@ tester.run("no-physical-properties", noPhysicalProperties, {
         { messageId: NO_PHYSICAL_CLASSESS },
         { messageId: NO_PHYSICAL_CLASSESS },
       ],
+    },
+    {
+      name: `{"..."}`,
+      code: `<div className={"pl-1 extra-class mr-2"}><span class={"pl-2 extra-class pr-2"}>text</span></div>`,
+      output: `<div className={"ps-1 extra-class me-2"}><span class={"ps-2 extra-class pe-2"}>text</span></div>`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+    },
+    {
+      name: "{`...`}",
+      code: "<div className={`pl-1 extra-class mr-2`} />",
+      output: "<div className={`ps-1 extra-class me-2`} />",
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+    },
+    {
+      name: '{isCondition && "..."}',
+      code: `<div className={isCondition && "pl-1 text-right mr-2"} />`,
+      output: `<div className={isCondition && "ps-1 text-end me-2"} />`,
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+    },
+    {
+      name: '{isCondition ? "..." : "..."}',
+      code: `<div className={isCondition ? "pl-1 text-right mr-2" : "pl-1 text-right mr-2"} />`,
+      // output: `<div className={isCondition ? "ps-1 text-end me-2" : "pl-1 text-right mr-2"} />`, // TODO: Fix this
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
       name: "should report if physical margin properties are used and fix them",
@@ -112,7 +155,6 @@ tester.run("no-physical-properties", noPhysicalProperties, {
       output: `<div className="scroll-ms-1 scroll-me-2 scroll-ps-1 scroll-pe-1">text</div>`,
       errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
-
     {
       name: "should report if physical properties are used with the important flag and fix it",
       code: `<div className="!pl-0">text</div>`,
