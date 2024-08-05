@@ -26,16 +26,11 @@ jobs:
             - recursive: true
               args: [--no-frozen-lockfile]
 
-      - run: |
-          git config --global user.email "82659015+AhmedBaset@users.noreply.github.com"
-          git config --global user.name "Ahmed Abdelbaset"
-          git add .
-
       - name: Publish a Canary version
         id: publish
         run: |
           pnpm changeset version --snapshot ${{ github.event.number }}
-          pnpm publish --access public --tag canary
+          pnpm -w publish --access public --tag canary --no-git-checks
           echo "published=true" >> "$GITHUB_OUTPUT"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
