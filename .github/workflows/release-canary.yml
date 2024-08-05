@@ -54,14 +54,16 @@ jobs:
               repo,
               body: `
                 🚀 A new Canary version has been released
-                \n\n
+                
                 You can install it by running:
-                \n
+                
                 \`\`\`bash
                 pnpm add eslint-plugin-rtl-friendly@${{ steps.publish.outputs.version }} -D
                 \`\`\`
-              `.replace(/\s+/g, ' ')
-            })
+              `.split("\n")
+               .map(l => l.trim())
+               .join("\n")
+              })
 
             github.issues.removeLabel({
               issue_number,
