@@ -238,26 +238,3 @@ function is<T extends TSESTree.AST_NODE_TYPES>(
 ): exp is Extract<TSESTree.Expression, { type: T }> {
   return exp.type === type;
 }
-
-function callOrValue<T extends string>(func: T | (() => T)): T;
-function callOrValue<T extends string, P>(
-  func: T | ((arg: P) => T),
-  param: P
-): T;
-function callOrValue<T extends string, P>(
-  func: T | ((arg: P) => T),
-  param?: P
-): T {
-  return typeof func === "function" ? func(param!) : func;
-}
-
-function T(type: `${TSESTree.AST_NODE_TYPES}`) {
-  return type as TSESTree.AST_NODE_TYPES;
-}
-
-function is<T extends TSESTree.AST_NODE_TYPES>(
-  exp: TSESTree.Expression,
-  type: `${T}`
-): exp is Extract<TSESTree.Expression, { type: T }> {
-  return exp.type === type;
-}
