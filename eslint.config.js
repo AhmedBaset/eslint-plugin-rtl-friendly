@@ -29,12 +29,6 @@ export default config(
     },
   },
   {
-    files: ["tests/**/*.ts"],
-    languageOptions: {
-      globals: globals.jest,
-    },
-  },
-  {
     files: ["**/*.{tsx,jsx}"],
     ...rtlFriendly.configs.recommended,
   }
