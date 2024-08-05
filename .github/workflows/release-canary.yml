@@ -3,11 +3,15 @@ name: Release Canary
 on:
   pull_request:
     types: [labeled]
-    branches: ["*"]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
+  works:
+    name: I work
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "I work"
   release:
     name: Release
     timeout-minutes: 10
