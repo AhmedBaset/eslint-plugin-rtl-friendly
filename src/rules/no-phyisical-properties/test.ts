@@ -1,5 +1,5 @@
-import * as vitest from "vitest"
 import { RuleTester } from "@typescript-eslint/rule-tester";
+import * as vitest from "vitest";
 import { NO_PHYSICAL_CLASSESS, noPhysicalProperties } from "./rule";
 
 RuleTester.afterAll = vitest.afterAll;
@@ -126,6 +126,88 @@ tester.run("no-physical-properties", noPhysicalProperties, {
       output:
         "<div className={isCondition ? `ps-1 text-end` : `pe-1 text-start`} />",
       errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+    },
+    {
+      name: '{cn("...")}',
+      code: `<div className={cn("pl-1 text-right mr-2")} />`,
+      output: `<div className={cn("ps-1 text-end me-2")} />`,
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+    },
+    {
+      name: '{cn(isCondition && "...")}',
+      code: `<div className={cn(isCondition && "pl-1 text-right mr-2")} />`,
+      output: `<div className={cn(isCondition && "ps-1 text-end me-2")} />`,
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+    },
+    {
+      name: '{cn(isCondition ? "..." : "...")}',
+      code: '<div className={cn(isCondition ? "pl-1 text-left" : `pr-1 text-right`)} />',
+      output:
+        '<div className={cn(isCondition ? "ps-1 text-start" : `pe-1 text-end`)} />',
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+    },
+    {
+      name: '{cn("...", isCondition && "...")}',
+      code: `<div className={cn("rounded-l-md", isCondition && "pl-1 text-right mr-2")} />`,
+      output: `<div className={cn("rounded-s-md", isCondition && "ps-1 text-end me-2")} />`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+    },
+    {
+      name: '{cn(["...", "..."])}',
+      code: `<div className={cn(["pl-1 text-right", "mr-2"])} />`,
+      output: `<div className={cn(["ps-1 text-end", "me-2"])} />`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+    },
+    {
+      name: '{cn(["...", ...["..."]])}',
+      code: `<div className={cn(["pl-1"], [["left-0"]], ...["text-right", "mr-2"])} />`,
+      output: `<div className={cn(["ps-1"], [["start-0"]], ...["text-end", "me-2"])} />`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+    },
+    {
+      name: '{cn({"...": true})}',
+      code: `<div className={cn({"pl-1 text-right": true})} />`,
+      output: `<div className={cn({"ps-1 text-end": true})} />`,
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+    },
+    {
+      name: '{cn({"...": "..."}, isCondition && {"...": "..."})}',
+      code: `<div className={cn({"pl-1 text-right": "mr-2"}, isCondition && {"pl-2": "text-left"})} />`,
+      output: `<div className={cn({"ps-1 text-end": "me-2"}, isCondition && {"ps-2": "text-start"})} />`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+    },
+    {
+      name: "clsx('...', [1 && '...', { ...: false, ...: null }, is && ['...', ['...']]], '...')",
+      code: `<div className={clsx('pl-1', [1 && 'text-right', { 'text-left': false, 'mr-2': null }, is && ['pr-2', ['pl-2']]], 'mr-1')} />`,
+      output: `<div className={clsx('ps-1', [1 && 'text-end', { 'text-start': false, 'me-2': null }, is && ['pe-2', ['ps-2']]], 'me-1')} />`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
         { messageId: NO_PHYSICAL_CLASSESS },
         { messageId: NO_PHYSICAL_CLASSESS },
       ],

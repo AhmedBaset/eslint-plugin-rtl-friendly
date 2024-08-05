@@ -2,7 +2,6 @@
 
 import js from "@eslint/js";
 import eslintPlugin from "eslint-plugin-eslint-plugin";
-import globals from "globals";
 import { config, configs } from "typescript-eslint";
 
 import rtlFriendly from "./dist/index.js";
@@ -10,11 +9,6 @@ import rtlFriendly from "./dist/index.js";
 export default config(
   {
     ignores: ["dist/**/*"],
-  },
-  {
-    languageOptions: {
-      globals: globals.node,
-    },
   },
   eslintPlugin.configs["flat/recommended"],
   js.configs.recommended,

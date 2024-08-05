@@ -30,7 +30,7 @@ jobs:
         run: |
           npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           pnpm changeset version --snapshot ${{ github.event.number }}
-          npm publish --access public --tag canary --no-git-checks
+          #  npm publish --access public --tag canary --no-git-checks
           echo "published=true" >> "$GITHUB_OUTPUT"
           echo "version=$(npm pkg get version | sed -e 's/^"//;s/"$//')" >> "$GITHUB_OUTPUT"
         env:
@@ -56,11 +56,14 @@ jobs:
                 🚀 A new Canary version has been released
                 
                 You can install it by running:
+                
                 \`\`\`bash
                 pnpm add eslint-plugin-rtl-friendly@${{ steps.publish.outputs.version }} -D
                 \`\`\`
-              `.replace(/\s+/g, ' ')
-            })
+              `.split("\n")
+               .map(l => l.trim())
+               .join("\n")
+              })
 
             github.issues.removeLabel({
               issue_number,
