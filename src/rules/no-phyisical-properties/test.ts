@@ -199,6 +199,15 @@ tester.run("no-physical-properties", noPhysicalProperties, {
       ],
     },
     {
+      name: "clsx('...', [1 && '...', { ...: false, ...: null }, ['...', ['...']]], '...')",
+      code: `clsx('pl-1', [1 && 'text-right', { 'text-left': false, 'mr-2': null }, ['pr-2', ['pl-2']]], 'mr-1')`,
+      output: `clsx('ps-1', [1 && 'text-end', { 'text-start': false, 'me-2': null }, ['pe-2', ['ps-2']]], 'me-1')`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS }
+      ],
+      only: true
+    },
+    {
       name: "should report if physical margin properties are used and fix them",
       code: `<div className="ml-1 mr-2">text</div>`,
       output: `<div className="ms-1 me-2">text</div>`,
