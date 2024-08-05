@@ -7,11 +7,6 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  works:
-    name: I work
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "I work"
   release:
     name: Release
     timeout-minutes: 10
@@ -33,8 +28,9 @@ jobs:
         id: publish
         run: |
           pnpm changeset version --snapshot ${{ github.event.number }}
-          pnpm -w publish --access public --tag canary --no-git-checks
+          npm publish --access public --tag canary --no-git-checks
           echo "published=true" >> "$GITHUB_OUTPUT"
+          echo "version=$(npm pkg get version | sed -e 's/^"//;s/"$//')" >> "$GITHUB_OUTPUT"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
@@ -53,8 +49,8 @@ jobs:
               body: `
                 🚀 Successfully released canary version to npm.
                 You can install it by running:
+                \`\`\`bash
+                pnpm add eslint-plugin-rtl-friendly@${{ steps.publish.outputs.version }} -D
                 \`\`\`
-                pnpm add eslint-plugin-rtl@canary
-                \`\`\`
-              `.replace(/^\s+|\s+$/g, '')
+              `.replace(/\s+/g, '')
             })
