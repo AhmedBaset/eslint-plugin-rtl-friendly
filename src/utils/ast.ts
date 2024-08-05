@@ -1,110 +1,46 @@
-import type { Expression, JSXAttribute } from "estree-jsx";
+import type { TSESTree } from "@typescript-eslint/utils";
 
-type Val = string | number | bigint | boolean | RegExp | null | undefined;
-
-export function extractFromNode(node: JSXAttribute) {
-  // const token = extractTokenFromNode(node)
-  // if (token) {
-  //   return token.raw;
-  // }
-
-  // value: Literal | JSXExpressionContainer | JSXElement | JSXFragment | null
-  const valueType = node.value?.type;
-  if (!valueType) return;
-
-  const result: Val[] = [];
-
-  // 1. Literal className="..."
-  if (valueType === "Literal") result.push(node.value?.value);
-  // 2. JSXExpressionContainer className={...}
-  else if (valueType === "JSXExpressionContainer") {
-    const expression = node.value?.expression;
-
-    if (expression?.type === "JSXEmptyExpression" || !expression) return;
-
-    if (expression.type === "Literal") return [expression.value];
-    if (expression.type === "TemplateLiteral")
-      result.push(expression.quasis[0].value.raw);
-
-    result.push(...extractFromExpression(expression));
-  }
-
-  // Exit if JSXElement | JSXFragment | null
-  if (
-    valueType === "JSXElement" ||
-    valueType === "JSXFragment" ||
-    !node.value
-  ) {
-    return;
-  }
-
-  return result;
-}
-
-function extractFromExpression(expression: Expression) {
-  // We care about:
-  // -> Literal;
-  // -> TemplateLiteral;
-  // -> BinaryExpression
-  // -> CallExpression;
-  // -> ConditionalExpression;
-  // -> LogicalExpression;
-
-  const result: Val[] = [];
-
-  if (expression.type === "Literal") result.push(expression.value);
-  if (expression.type === "TemplateLiteral")
-    result.push(expression.quasis[0].value.raw);
-  if (expression.type === "ConditionalExpression") {
-    console.log(expression);
-    // result.push(extractFromExpression(expression.left));
-    // result.push(extractFromExpression(expression.right));
-  }
-  if (expression.type === "CallExpression") {
-    expression.arguments.forEach((arg) => {
-      if (arg.type === "SpreadElement") {
-        result.push(...extractFromExpression(arg.argument));
-      } else {
-        result.push(...extractFromExpression(arg));
-      }
-    });
-  }
-  if (expression.type === "ConditionalExpression") {
-    result.push(...extractFromExpression(expression.consequent));
-    result.push(...extractFromExpression(expression.alternate));
-  }
-  if (expression.type === "LogicalExpression") {
-    result.push(...extractFromExpression(expression.right));
-  }
-
-  return result;
-}
+export type Token = (
+  | TSESTree.JSXAttribute
+  | TSESTree.Expression
+  | TSESTree.TemplateElement
+) & {
+  getValue: () => string;
+  getRaw: () => string;
+};
 
 export function extractTokenFromNode(
-  node: JSXAttribute,
+  node: TSESTree.JSXAttribute,
   runner: "checker" | "fixer"
-): { type: string; value?: string; raw?: string } | undefined {
+): (Token | undefined | null)[] {
   // value: Literal | JSXExpressionContainer | JSXElement | JSXFragment | null
   const type = node.value?.type;
-  if (!type) return;
+  if (!type) return [];
 
-  if (type === "Literal") return validate(node.value);
+  const nodeValue = node.value;
+
+  if (isStringLiteral(nodeValue))
+    return format(
+      nodeValue,
+      (n) => n.value,
+      (n) => n.raw
+    );
 
   if (type === "JSXExpressionContainer") {
     const expression = node.value?.expression;
 
-    if (expression?.type === "JSXEmptyExpression" || !expression) return;
+    if (!expression || expression?.type === "JSXEmptyExpression") return [];
 
     return extractTokenFromExpression(expression, runner);
   }
 
-  return;
+  return [];
 }
 
 function extractTokenFromExpression(
-  expression: Expression,
+  exp: TSESTree.Expression,
   runner: "checker" | "fixer"
-): { type: string; value: string; raw: string } | undefined {
+): (Token | undefined)[] {
   // We care about:
   // -> Literal;
   // -> TemplateLiteral;
@@ -113,43 +49,39 @@ function extractTokenFromExpression(
   // -> ConditionalExpression;
   // -> LogicalExpression;
 
-  const rerun = (expression: Expression) => {
+  const rerun = (expression: TSESTree.Expression) => {
     return extractTokenFromExpression(expression, runner);
   };
 
-  const isFixer = runner === "fixer";
-  const type = expression.type;
+  // const isFixer = runner === "fixer";
+  const type = exp.type;
 
-  if (type === "Literal")
-    return validate({
-      ...expression,
-      value: expression.value || expression.raw,
-    });
-  if (type === "TemplateLiteral") {
-    return validate({
-      ...expression.quasis[0],
-      value: expression.quasis[0].value.cooked,
-      raw: "`" + expression.quasis[0].value.raw + "`",
-    });
+  if (isStringLiteral(exp))
+    return format(
+      exp,
+      () => exp.value,
+      () => exp.raw
+    );
+
+  if (exp?.type === "TemplateLiteral") {
+    return format(
+      exp.quasis,
+      (q) => q.value.cooked,
+      (q) => `\`${q.value.raw}\``
+    );
   }
 
-  if (type === "LogicalExpression") {
-    return rerun(expression.right);
+  if (exp.type === "LogicalExpression") {
+    // isCondition && "..."
+    return rerun(exp.right);
   }
 
-  if (type === "ConditionalExpression") {
-    // TODO: Currently, Auto Fixer works on the consequent only
-    if (isFixer) {
-      return rerun(expression.consequent);
-    } else {
-      const consequent = rerun(expression.consequent);
-      const alternate = rerun(expression.alternate);
-      consequent!.value = `${consequent!.value}" : "${alternate!.value}`;
-      return consequent;
-    }
+  if (exp.type === "ConditionalExpression") {
+    return [...rerun(exp.consequent), ...rerun(exp.alternate)];
+
   }
 
-  console.log("UNIMPLEMENTED: ", type);
+ // console.log("UNIMPLEMENTED: ", type);
 
   // if (expression.type === "BinaryExpression") {
   //   result.push(...extractFromExpression(expression.left));
@@ -172,20 +104,38 @@ function extractTokenFromExpression(
   //   result.push(...extractFromExpression(expression.right));
   // }
 
-  return;
+  return [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function validate(result: null | { type: string; value?: any; raw?: string }):
-  | undefined
-  | {
-      type: string;
-      value: string;
-      raw: string;
-    } {
-  if (!result) return;
-  if (typeof result.value !== "string") return;
-  if (typeof result.raw !== "string") return;
+function format<
+  T extends
+    | TSESTree.JSXAttribute
+    | TSESTree.Expression
+    | TSESTree.TemplateElement,
+>(
+  nodeOrToken: T | T[],
+  getValue: (t: T) => string,
+  getRaw: (t: T) => string
+): (T & { getValue: () => string; getRaw: () => string })[] {
+  if (Array.isArray(nodeOrToken)) {
+    return nodeOrToken.map((t) => ({
+      ...t,
+      getValue: () => getValue(t),
+      getRaw: getRaw ? () => getRaw(t) : () => getValue(t),
+    }));
+  }
 
-  return result as { type: string; value: string; raw: string };
+  return [
+    {
+      ...nodeOrToken,
+      getValue: () => getValue(nodeOrToken),
+      getRaw: () => (getRaw ?? getValue)(nodeOrToken),
+    },
+  ] as const;
+}
+
+function isStringLiteral(
+  value: TSESTree.JSXAttribute["value"] | TSESTree.Expression
+): value is TSESTree.StringLiteral {
+  return value?.type === "Literal" && typeof value?.value === "string";
 }

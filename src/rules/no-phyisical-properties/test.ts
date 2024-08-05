@@ -1,5 +1,5 @@
-import { RuleTester } from "eslint";
-import { noPhysicalProperties, NO_PHYSICAL_CLASSESS } from "./rule";
+import { RuleTester } from "@typescript-eslint/rule-tester";
+import { NO_PHYSICAL_CLASSESS, noPhysicalProperties } from "./rule";
 
 const tester = new RuleTester({
   languageOptions: {
@@ -106,9 +106,23 @@ tester.run("no-physical-properties", noPhysicalProperties, {
     },
     {
       name: '{isCondition ? "..." : "..."}',
-      code: `<div className={isCondition ? "pl-1 text-right mr-2" : "pl-1 text-right mr-2"} />`,
-      // output: `<div className={isCondition ? "ps-1 text-end me-2" : "pl-1 text-right mr-2"} />`, // TODO: Fix this
-      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      code: `<div className={isCondition ? "pl-1 text-right" : "pr-1 text-left"} />`,
+      output:
+        '<div className={isCondition ? "ps-1 text-end" : "pe-1 text-start"} />',
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+    },
+    {
+      name: "{isCondition ? `...` : `...`}",
+      code: "<div className={isCondition ? `pl-1 text-right` : `pr-1 text-left`} />",
+      output:
+        "<div className={isCondition ? `ps-1 text-end` : `pe-1 text-start`} />",
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
     },
     {
       name: "should report if physical margin properties are used and fix them",

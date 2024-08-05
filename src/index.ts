@@ -1,17 +1,16 @@
-import type { ESLint, Linter } from "eslint";
-import pkg from "../package.json";
+import type { FlatConfig } from "@typescript-eslint/utils/ts-eslint";
 import { noPhysicalProperties } from "./rules/no-phyisical-properties/rule";
 
 const rtlFriendly = {
   meta: {
-    name: pkg.name,
-    version: pkg.version,
+    name: "eslint-plugin-rtl-friendly",
+    // version: pkg.version,
   },
-  configs: {} as { recommended: Linter.FlatConfig },
+  configs: {} as { recommended: FlatConfig.Config },
   rules: {
     "no-physical-properties": noPhysicalProperties,
   },
-} satisfies ESLint.Plugin;
+};
 
 const configs = {
   recommended: {
@@ -29,8 +28,8 @@ const configs = {
         },
       },
     },
-  },
-} satisfies ESLint.Plugin["configs"];
+  } satisfies FlatConfig.Config,
+};
 
 Object.assign(rtlFriendly.configs, configs);
 
