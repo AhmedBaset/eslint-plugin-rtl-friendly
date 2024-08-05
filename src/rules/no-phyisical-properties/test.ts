@@ -1,5 +1,11 @@
+import * as vitest from "vitest"
 import { RuleTester } from "@typescript-eslint/rule-tester";
 import { NO_PHYSICAL_CLASSESS, noPhysicalProperties } from "./rule";
+
+RuleTester.afterAll = vitest.afterAll;
+RuleTester.it = vitest.it;
+RuleTester.itOnly = vitest.it.only;
+RuleTester.describe = vitest.describe;
 
 const tester = new RuleTester({
   languageOptions: {
