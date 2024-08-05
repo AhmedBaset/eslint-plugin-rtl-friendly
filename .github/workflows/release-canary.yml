@@ -27,6 +27,7 @@ jobs:
       - name: Publish a Canary version
         id: publish
         run: |
+          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
           pnpm changeset version --snapshot ${{ github.event.number }}
           npm publish --access public --tag canary --no-git-checks
           echo "published=true" >> "$GITHUB_OUTPUT"
