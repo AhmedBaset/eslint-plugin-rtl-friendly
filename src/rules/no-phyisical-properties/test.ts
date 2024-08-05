@@ -135,14 +135,12 @@ tester.run("no-physical-properties", noPhysicalProperties, {
       code: `<div className={cn("pl-1 text-right mr-2")} />`,
       output: `<div className={cn("ps-1 text-end me-2")} />`,
       errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
-      only: true,
     },
     {
       name: '{cn(isCondition && "...")}',
       code: `<div className={cn(isCondition && "pl-1 text-right mr-2")} />`,
       output: `<div className={cn(isCondition && "ps-1 text-end me-2")} />`,
       errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
-      only: true,
     },
     {
       name: '{cn(isCondition ? "..." : "...")}',
@@ -153,7 +151,6 @@ tester.run("no-physical-properties", noPhysicalProperties, {
         { messageId: NO_PHYSICAL_CLASSESS },
         { messageId: NO_PHYSICAL_CLASSESS },
       ],
-      only: true,
     },
     {
       name: '{cn("...", isCondition && "...")}',
@@ -163,7 +160,6 @@ tester.run("no-physical-properties", noPhysicalProperties, {
         { messageId: NO_PHYSICAL_CLASSESS },
         { messageId: NO_PHYSICAL_CLASSESS },
       ],
-      only: true,
     },
     {
       name: '{cn(["...", "..."])}',
@@ -173,7 +169,6 @@ tester.run("no-physical-properties", noPhysicalProperties, {
         { messageId: NO_PHYSICAL_CLASSESS },
         { messageId: NO_PHYSICAL_CLASSESS },
       ],
-      only: true,
     },
     {
       name: '{cn(["...", ...["..."]])}',
@@ -185,14 +180,12 @@ tester.run("no-physical-properties", noPhysicalProperties, {
         { messageId: NO_PHYSICAL_CLASSESS },
         { messageId: NO_PHYSICAL_CLASSESS },
       ],
-      only: true,
     },
     {
       name: '{cn({"...": true})}',
       code: `<div className={cn({"pl-1 text-right": true})} />`,
       output: `<div className={cn({"ps-1 text-end": true})} />`,
       errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
-      only: true,
     },
     {
       name: '{cn({"...": "..."}, isCondition && {"...": "..."})}',
@@ -204,7 +197,6 @@ tester.run("no-physical-properties", noPhysicalProperties, {
         { messageId: NO_PHYSICAL_CLASSESS },
         { messageId: NO_PHYSICAL_CLASSESS },
       ],
-      only: true,
     },
     {
       name: "should report if physical margin properties are used and fix them",
