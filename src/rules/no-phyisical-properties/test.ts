@@ -131,6 +131,82 @@ tester.run("no-physical-properties", noPhysicalProperties, {
       ],
     },
     {
+      name: '{cn("...")}',
+      code: `<div className={cn("pl-1 text-right mr-2")} />`,
+      output: `<div className={cn("ps-1 text-end me-2")} />`,
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      only: true,
+    },
+    {
+      name: '{cn(isCondition && "...")}',
+      code: `<div className={cn(isCondition && "pl-1 text-right mr-2")} />`,
+      output: `<div className={cn(isCondition && "ps-1 text-end me-2")} />`,
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      only: true,
+    },
+    {
+      name: '{cn(isCondition ? "..." : "...")}',
+      code: '<div className={cn(isCondition ? "pl-1 text-left" : `pr-1 text-right`)} />',
+      output:
+        '<div className={cn(isCondition ? "ps-1 text-start" : `pe-1 text-end`)} />',
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+      only: true,
+    },
+    {
+      name: '{cn("...", isCondition && "...")}',
+      code: `<div className={cn("rounded-l-md", isCondition && "pl-1 text-right mr-2")} />`,
+      output: `<div className={cn("rounded-s-md", isCondition && "ps-1 text-end me-2")} />`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+      only: true,
+    },
+    {
+      name: '{cn(["...", "..."])}',
+      code: `<div className={cn(["pl-1 text-right", "mr-2"])} />`,
+      output: `<div className={cn(["ps-1 text-end", "me-2"])} />`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+      only: true,
+    },
+    {
+      name: '{cn(["...", ...["..."]])}',
+      code: `<div className={cn(["pl-1"], [["left-0"]], ...["text-right", "mr-2"])} />`,
+      output: `<div className={cn(["ps-1"], [["start-0"]], ...["text-end", "me-2"])} />`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+      only: true,
+    },
+    {
+      name: '{cn({"...": true})}',
+      code: `<div className={cn({"pl-1 text-right": true})} />`,
+      output: `<div className={cn({"ps-1 text-end": true})} />`,
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      only: true,
+    },
+    {
+      name: '{cn({"...": "..."}, isCondition && {"...": "..."})}',
+      code: `<div className={cn({"pl-1 text-right": "mr-2"}, isCondition && {"pl-2": "text-left"})} />`,
+      output: `<div className={cn({"ps-1 text-end": "me-2"}, isCondition && {"ps-2": "text-start"})} />`,
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
+      only: true,
+    },
+    {
       name: "should report if physical margin properties are used and fix them",
       code: `<div className="ml-1 mr-2">text</div>`,
       output: `<div className="ms-1 me-2">text</div>`,

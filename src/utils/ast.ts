@@ -1,5 +1,7 @@
 import type { TSESTree } from "@typescript-eslint/utils";
 
+const unimplemented = new Set<string>();
+
 export type Token = (
   | TSESTree.JSXAttribute
   | TSESTree.Expression
@@ -54,14 +56,16 @@ function extractTokenFromExpression(
   };
 
   // const isFixer = runner === "fixer";
-  const type = exp.type;
 
-  if (isStringLiteral(exp))
+  if (exp.type === "Literal") {
+    if (typeof exp.value !== "string") return []; // boolean, number, null, undefined, etc...
+
     return format(
       exp,
       () => exp.value,
       () => exp.raw
     );
+  }
 
   if (exp?.type === "TemplateLiteral") {
     return format(
@@ -78,10 +82,48 @@ function extractTokenFromExpression(
 
   if (exp.type === "ConditionalExpression") {
     return [...rerun(exp.consequent), ...rerun(exp.alternate)];
-
   }
 
- // console.log("UNIMPLEMENTED: ", type);
+  if (exp.type === "ArrayExpression") {
+    return exp.elements.flatMap((el) => {
+      if (!el) return [];
+
+      if (el.type === "SpreadElement") return rerun(el.argument);
+
+      return rerun(el);
+    });
+  }
+
+  if (exp.type === "ObjectExpression") {
+    return exp.properties.flatMap((prop) => {
+      if (prop.type === "SpreadElement") return rerun(prop.argument);
+
+      return [prop.key, prop.value].flatMap((el) => {
+        if (
+          el.type === "AssignmentPattern" ||
+          el.type === "TSEmptyBodyFunctionExpression"
+        )
+          return [];
+
+        return rerun(el);
+      });
+    });
+  }
+
+  if (exp.type === "CallExpression") {
+    return exp.arguments.flatMap((arg) => {
+      if (arg.type === "SpreadElement") {
+        return rerun(arg.argument);
+      }
+
+      return rerun(arg);
+    });
+  }
+
+  if (!unimplemented.has(exp.type)) {
+    console.log("unimplemented: ", exp.type, exp);
+    unimplemented.add(exp.type);
+  }
 
   // if (expression.type === "BinaryExpression") {
   //   result.push(...extractFromExpression(expression.left));
