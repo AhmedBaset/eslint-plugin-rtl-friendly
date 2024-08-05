@@ -3,8 +3,6 @@ name: Release Canary
 on:
   pull_request:
     types: [labeled]
-    branches:
-      - main
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
