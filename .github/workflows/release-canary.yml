@@ -44,15 +44,34 @@ jobs:
         with:
           github-token: ${{ secrets.MY_GITHUB_TOKEN }}
           script: |
+            const issue_number = context.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
             github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              issue_number,
+              owner,
+              repo,
               body: `
-                🚀 Successfully released canary version to npm.
+                🚀 A new Canary version has been released
+                
                 You can install it by running:
                 \`\`\`bash
                 pnpm add eslint-plugin-rtl-friendly@${{ steps.publish.outputs.version }} -D
                 \`\`\`
               `.replace(/\s+/g, ' ')
             })
+
+            github.issues.removeLabel({
+              issue_number,
+              owner,
+              repo,
+              name: 'release canary'
+            });
+
+            github.issues.addLabels({
+              issue_number,
+              owner,
+              repo,
+              labels: ['canary released']
+            });
