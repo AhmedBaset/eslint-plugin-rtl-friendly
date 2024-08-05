@@ -40,7 +40,7 @@
     "lint": "eslint .",
     "test": "vitest --run",
     "test:watch": "vitest",
-    "test:coverage": "vitest --coverage",
+    "test:coverage": "vitest --run --coverage",
     "prepublishOnly": "npm run build",
     "gen-e2e": "tsx scripts/generate-e2e"
   },

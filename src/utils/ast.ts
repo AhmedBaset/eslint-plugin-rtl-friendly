@@ -36,6 +36,11 @@ export function extractTokenFromNode(
     return extractTokenFromExpression(expression, runner);
   }
 
+  if (!unimplemented.has(type)) { 
+    console.log("Unimplemented: ", type, node);
+    unimplemented.add(type);
+  }
+
   return [];
 }
 
@@ -121,7 +126,7 @@ function extractTokenFromExpression(
   }
 
   if (!unimplemented.has(exp.type)) {
-    console.log("unimplemented: ", exp.type, exp);
+    console.log("Unimplemented: ", exp.type, exp);
     unimplemented.add(exp.type);
   }
 
