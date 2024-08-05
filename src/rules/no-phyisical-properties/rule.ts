@@ -1,8 +1,9 @@
-import { Rule, type AST } from "eslint";
-
-import * as ESTree from "estree";
-import type { JSXAttribute } from "estree-jsx";
-import { extractTokenFromNode } from "../../utils/ast.js";
+import type { TSESTree } from "@typescript-eslint/utils";
+import type {
+  RuleContext,
+  RuleModule,
+} from "@typescript-eslint/utils/ts-eslint";
+import { type Token, extractTokenFromNode } from "../../utils/ast.js";
 import { parseForPhysicalClasses } from "../../utils/tailwind.js";
 
 // const cache = new Map<
@@ -10,26 +11,33 @@ import { parseForPhysicalClasses } from "../../utils/tailwind.js";
 //   /** valid */ string
 // >();
 
-export const NO_PHYSICAL_CLASSESS = "NO_PHYSICAL_CLASSESS";
+// const createRule = ESLintUtils.RuleCreator((ruleName) => {
+//   return `https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/blob/main/src/rules/${ruleName}/README.md`;
+// });
 
-export const noPhysicalProperties: Rule.RuleModule = {
+// const RULE_NAME = "no-physical-properties";
+export const NO_PHYSICAL_CLASSESS = "NO_PHYSICAL_CLASSESS";
+type NO_PHYSICAL_CLASSESS = typeof NO_PHYSICAL_CLASSESS;
+
+export const noPhysicalProperties: RuleModule<NO_PHYSICAL_CLASSESS> = {
+  // name: RULE_NAME,
+  defaultOptions: [],
   meta: {
     type: "suggestion",
     docs: {
       description: "Encourage the use of RTL-friendly styles",
-      recommended: true,
+      url: "https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/blob/main/src/rules/no-physical-properties/README.md",
     },
     fixable: "code",
     messages: {
+      // eslint-disable-next-line eslint-plugin/no-unused-message-ids
       [NO_PHYSICAL_CLASSESS]: `Avoid using physical properties such as "{{ invalid }}". Instead, use logical properties like "{{ valid }}" for better RTL support.`,
     },
     schema: [],
   },
-  create(ctx) {
+  create: (ctx) => {
     return {
-      JSXAttribute: (estreeNode: ESTree.Node) => {
-        const node = estreeNode as JSXAttribute;
-
+      JSXAttribute: (node) => {
         if (node.name.type !== "JSXIdentifier") return;
         const attr = node.name.name;
 
@@ -50,58 +58,59 @@ export const noPhysicalProperties: Rule.RuleModule = {
         //   return;
         // }
 
-        const classesAsString = extractTokenFromNode(node, "checker")?.value;
-        if (!classesAsString) return;
-        
-        const classes = classesAsString.split(" ");
+        const tokens = extractTokenFromNode(node, "checker");
+        tokens?.forEach((token) => {
+          const classValue = token?.getValue();
+          if (!classValue) return;
 
-        const parsed = parseForPhysicalClasses(classes);
+          const classes = classValue.split(" ");
 
-        const isInvalid = parsed.some((p) => p.isInvalid);
-        if (!isInvalid) return;
+          const parsed = parseForPhysicalClasses(classes);
 
-        const invalid = parsed.map((p) => p.original).join(" ");
-        const valid = parsed.map((p) => p.valid).join(" ");
+          const isInvalid = parsed.some((p) => p.isInvalid);
+          if (!isInvalid) return;
 
-        // cache.set(classesAsString, valid);
-        report({ ctx, node, invalid, valid });
+          const invalid = parsed.map((p) => p.original).join(" ");
+          const valid = parsed.map((p) => p.valid).join(" ");
+
+          // cache.set(classesAsString, valid);
+          report({ ctx, node, invalid, valid, token: token ?? null });
+        });
       },
     };
   },
 };
+
+type Context = Readonly<RuleContext<"NO_PHYSICAL_CLASSESS", []>>;
 
 function report({
   ctx,
   invalid,
   valid,
   node,
+  token,
 }: {
-  ctx: Rule.RuleContext;
-  node: JSXAttribute;
+  ctx: Context;
+  node: TSESTree.JSXAttribute;
   invalid: string;
   valid: string;
+  token: Token | null;
 }) {
   return ctx.report({
     node,
-    messageId: "NO_PHYSICAL_CLASSESS",
+    messageId: NO_PHYSICAL_CLASSESS,
     data: {
       invalid,
       valid,
     },
     loc: {
-      start: node.loc!.start,
-      end: node.loc!.end,
+      start: token?.loc?.start ?? node.loc!.start,
+      end: token?.loc?.end ?? node.loc!.end,
     },
     fix: (fixer) => {
-      const token = extractTokenFromNode(node, "fixer");
-      if (token?.raw) {
-        return fixer.replaceText(
-          token as AST.Token,
-          token.raw?.replace(invalid, valid)
-        );
-      }
+      if (!token) return null;
 
-      return null;
+      return fixer.replaceText(token, token?.getRaw()?.replace(invalid, valid));
     },
   });
 }

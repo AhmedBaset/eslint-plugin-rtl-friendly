@@ -478,7 +478,11 @@ declare const React;
   </>
 
   <>
-    {/* eslint-disable-next-line rtl-friendly/no-physical-properties */}
-    <div className={Math.random() > 0.5 ? "pl-1 text-right mr-2" : "pl-1 text-right mr-2"} />
+    <div
+      className={
+        // eslint-disable-next-line rtl-friendly/no-physical-properties
+        Math.random() > 0.5 ? "pl-1 text-right mr-2" : "pr-1 text-left ml-2"
+      }
+    />
   </>
 </>;
