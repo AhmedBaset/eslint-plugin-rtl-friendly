@@ -46,14 +46,6 @@ function extractTokensFromExpression(
   exp: Exp,
   runner: "checker" | "fixer"
 ): (Token | undefined)[] {
-  // We care about:
-  // -> Literal;
-  // -> TemplateLiteral;
-  // -> BinaryExpression
-  // -> CallExpression;
-  // -> ConditionalExpression;
-  // -> LogicalExpression;
-
   const rerun = (expression: Exp) => {
     return extractTokensFromExpression(expression, runner);
   };
@@ -139,19 +131,14 @@ function extractTokensFromExpression(
   }
 
   if (is(exp, "TaggedTemplateExpression")) {
-    // tag`...${exp}...`
-    console.log(exp.quasi.quasis);
+    // tw`...`
     return exp.quasi.quasis.flatMap((q) => rerun(q));
   }
 
-  // if (
-  //   is(exp, "Identifier") ||
-  //   is(exp, "MemberExpression") ||
-  //   is(exp, "TaggedTemplateExpression")
-  // ) {
-  //   // Will be implemented
-  //   return [];
-  // }
+  if (is(exp, "Identifier") || is(exp, "MemberExpression")) {
+    // We should follow the identifier and get the value
+    return [];
+  }
 
   // if ((unsupported as typeof exp.type[]).includes(exp.type)) {
   //   if (
@@ -254,7 +241,7 @@ function callOrValue<T extends string, P>(
   return typeof func === "function" ? func(param!) : func;
 }
 
-function is<T extends TSESTree.AST_NODE_TYPES>(
+function is<E extends Exp, T extends E["type"]>(
   exp: Exp,
   type: `${T}`
 ): exp is Extract<Exp, { type: T }> {

@@ -223,6 +223,15 @@ tester.run("no-physical-properties", noPhysicalProperties, {
       ],
     },
     {
+      name: "Identifier",
+      code: `
+        const variable = "text-left";
+        <div className={variable} />
+      `,
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      skip: true,
+    },
+    {
       name: "TaggedTemplate tw`...`",
       code: "<div className={tw`pl-1`} />",
       output: "<div className={tw`ps-1`} />",
