@@ -105,6 +105,12 @@ tester.run("no-physical-properties", noPhysicalProperties, {
       errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
     },
     {
+      name: `{"..." + "..."}`,
+      code: `<div className={"pl-2 " + "mr-1" + "text-left"} />`,
+      output: `<div className={"ps-2 " + "me-1" + "text-start"} />`,
+      errors: [{messageId: NO_PHYSICAL_CLASSESS}, {messageId: NO_PHYSICAL_CLASSESS}, {messageId: NO_PHYSICAL_CLASSESS}]
+    },
+    {
       name: '{isCondition && "..."}',
       code: `<div className={isCondition && "pl-1 text-right mr-2"} />`,
       output: `<div className={isCondition && "ps-1 text-end me-2"} />`,
