@@ -108,7 +108,11 @@ tester.run("no-physical-properties", noPhysicalProperties, {
       name: `{"..." + "..."}`,
       code: `<div className={"pl-2 " + "mr-1" + "text-left"} />`,
       output: `<div className={"ps-2 " + "me-1" + "text-start"} />`,
-      errors: [{messageId: NO_PHYSICAL_CLASSESS}, {messageId: NO_PHYSICAL_CLASSESS}, {messageId: NO_PHYSICAL_CLASSESS}]
+      errors: [
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+        { messageId: NO_PHYSICAL_CLASSESS },
+      ],
     },
     {
       name: '{isCondition && "..."}',
@@ -217,6 +221,19 @@ tester.run("no-physical-properties", noPhysicalProperties, {
         { messageId: NO_PHYSICAL_CLASSESS },
         { messageId: NO_PHYSICAL_CLASSESS },
       ],
+    },
+    {
+      name: "TaggedTemplate tw`...`",
+      code: "<div className={tw`pl-1`} />",
+      output: "<div className={tw`ps-1`} />",
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+    },
+    {
+      name: "TaggedTemplate tw`...` with ${...} inside (Not Supported)",
+      code: "<div className={tw`pl-1 ${'text-left'}`} />", // ${...} within TaggedTemplate
+      output: "<div className={tw`ps-1 ${'text-left'}`} />",
+      errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      skip: true,
     },
     {
       name: "should report if physical margin properties are used and fix them",

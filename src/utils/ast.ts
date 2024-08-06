@@ -11,7 +11,7 @@ export type Token = (
   getRaw: () => string;
 };
 
-export function extractTokenFromNode(
+export function extractTokensFromNode(
   node: TSESTree.JSXAttribute,
   runner: "checker" | "fixer"
 ): (Token | undefined | null)[] {
@@ -29,7 +29,7 @@ export function extractTokenFromNode(
 
     if (!expression || expression?.type === "JSXEmptyExpression") return [];
 
-    return extractTokenFromExpression(expression, runner);
+    return extractTokensFromExpression(expression, runner);
   }
 
   if (value.type === "JSXElement" || value.type === "JSXSpreadChild") {
@@ -40,8 +40,10 @@ export function extractTokenFromNode(
   return [];
 }
 
-function extractTokenFromExpression(
-  exp: TSESTree.Expression,
+type Exp = TSESTree.Expression | TSESTree.TemplateElement;
+
+function extractTokensFromExpression(
+  exp: Exp,
   runner: "checker" | "fixer"
 ): (Token | undefined)[] {
   // We care about:
@@ -52,8 +54,8 @@ function extractTokenFromExpression(
   // -> ConditionalExpression;
   // -> LogicalExpression;
 
-  const rerun = (expression: TSESTree.Expression) => {
-    return extractTokenFromExpression(expression, runner);
+  const rerun = (expression: Exp) => {
+    return extractTokensFromExpression(expression, runner);
   };
 
   // const isFixer = runner === "fixer";
@@ -73,6 +75,14 @@ function extractTokenFromExpression(
       exp.quasis,
       (q) => q.value.cooked,
       (q) => `\`${q.value.raw}\``
+    );
+  }
+
+  if (is(exp, "TemplateElement")) {
+    return format(
+      exp,
+      () => exp.value.cooked,
+      () => `\`${exp.value.raw}\``
     );
   }
 
@@ -103,8 +113,9 @@ function extractTokenFromExpression(
         if (
           el.type === "AssignmentPattern" ||
           el.type === "TSEmptyBodyFunctionExpression"
-        )
+        ) {
           return [];
+        }
 
         return rerun(el);
       });
@@ -121,10 +132,16 @@ function extractTokenFromExpression(
     });
   }
 
-  if (is(exp, "BinaryExpression")) {     
+  if (is(exp, "BinaryExpression")) {
     const right = rerun(exp.right);
     if (exp.left.type === "PrivateIdentifier") return right;
-    return [...right, ...rerun(exp.left)];    
+    return [...right, ...rerun(exp.left)];
+  }
+
+  if (is(exp, "TaggedTemplateExpression")) {
+    // tag`...${exp}...`
+    console.log(exp.quasi.quasis);
+    return exp.quasi.quasis.flatMap((q) => rerun(q));
   }
 
   // if (
@@ -238,8 +255,8 @@ function callOrValue<T extends string, P>(
 }
 
 function is<T extends TSESTree.AST_NODE_TYPES>(
-  exp: TSESTree.Expression,
+  exp: Exp,
   type: `${T}`
-): exp is Extract<TSESTree.Expression, { type: T }> {
+): exp is Extract<Exp, { type: T }> {
   return exp.type === type;
 }

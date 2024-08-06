@@ -3,7 +3,7 @@ import type {
   RuleContext,
   RuleModule,
 } from "@typescript-eslint/utils/ts-eslint";
-import { type Token, extractTokenFromNode } from "../../utils/ast.js";
+import { type Token, extractTokensFromNode } from "../../utils/ast.js";
 import { parseForPhysicalClasses } from "../../utils/tailwind.js";
 
 // const cache = new Map<
@@ -58,7 +58,7 @@ export const noPhysicalProperties: RuleModule<NO_PHYSICAL_CLASSESS> = {
         //   return;
         // }
 
-        const tokens = extractTokenFromNode(node, "checker");
+        const tokens = extractTokensFromNode(node, "checker");
         tokens?.forEach((token) => {
           const classValue = token?.getValue();
           if (!classValue) return;
