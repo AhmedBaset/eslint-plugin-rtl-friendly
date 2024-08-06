@@ -121,8 +121,13 @@ function extractTokenFromExpression(
     });
   }
 
+  if (is(exp, "BinaryExpression")) {     
+    const right = rerun(exp.right);
+    if (exp.left.type === "PrivateIdentifier") return right;
+    return [...right, ...rerun(exp.left)];    
+  }
+
   // if (
-  //   is(exp, "BinaryExpression") ||
   //   is(exp, "Identifier") ||
   //   is(exp, "MemberExpression") ||
   //   is(exp, "TaggedTemplateExpression")
