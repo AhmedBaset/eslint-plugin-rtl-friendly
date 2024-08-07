@@ -73,8 +73,8 @@ function extractTokensFromExpression(
   if (is(exp, "TemplateElement")) {
     return format(
       exp,
-      () => exp.value.cooked,
-      () => `\`${exp.value.raw}\``
+      exp.value.cooked,
+      `\`${exp.value.raw}\``
     );
   }
 
