@@ -1,5 +1,5 @@
 # eslint-plugin-rtl-friendly
-
+<!-- -->
 <div align="center">
 
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-rtl-friendly.svg)](https://www.npmjs.com/package/eslint-plugin-rtl-friendly)
