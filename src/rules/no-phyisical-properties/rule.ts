@@ -15,7 +15,7 @@ import { parseForPhysicalClasses } from "../../utils/tailwind.js";
 //   return `https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/blob/main/src/rules/${ruleName}/README.md`;
 // });
 
-// const RULE_NAME = "no-physical-properties";
+export const RULE_NAME = "no-physical-properties";
 export const NO_PHYSICAL_CLASSESS = "NO_PHYSICAL_CLASSESS";
 type NO_PHYSICAL_CLASSESS = typeof NO_PHYSICAL_CLASSESS;
 
@@ -58,7 +58,7 @@ export const noPhysicalProperties: RuleModule<NO_PHYSICAL_CLASSESS> = {
         //   return;
         // }
 
-        const tokens = extractTokensFromNode(node, "checker");
+        const tokens = extractTokensFromNode(node, ctx, "checker");
         tokens?.forEach((token) => {
           const classValue = token?.getValue();
           if (!classValue) return;
@@ -81,7 +81,7 @@ export const noPhysicalProperties: RuleModule<NO_PHYSICAL_CLASSESS> = {
   },
 };
 
-type Context = Readonly<RuleContext<"NO_PHYSICAL_CLASSESS", []>>;
+export type Context = Readonly<RuleContext<"NO_PHYSICAL_CLASSESS", []>>;
 
 function report({
   ctx,

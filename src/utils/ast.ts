@@ -1,4 +1,5 @@
 import { TSESTree } from "@typescript-eslint/utils";
+import type { Context } from "../rules/no-phyisical-properties/rule";
 
 const unimplemented = new Set<string>();
 
@@ -12,30 +13,44 @@ export type Token = (
 };
 
 export function extractTokensFromNode(
-  node: TSESTree.JSXAttribute,
+  // node: TSESTree.JSXAttribute,
+  node: TSESTree.Node,
+  ctx: Context,
   runner: "checker" | "fixer"
-): (Token | undefined | null)[] {
-  // value: Literal | JSXExpressionContainer | JSXElement | JSXFragment | null
-  const value = node.value;
-  if (!value) return [];
+): Token[] {
+  const run = (exp: Exp) => extractTokensFromExpression(exp, ctx, runner);
 
-  if (value?.type === "Literal") {
-    if (typeof value.value !== "string") return []; // boolean, number, null, undefined, etc...
-    return format(value, value.value, value.raw);
-  }
+  if (node.type === "JSXAttribute") {
+    // value: Literal | JSXExpressionContainer | JSXElement | JSXFragment | null
+    const value = node.value;
+    if (!value) return [];
 
-  if (value.type === "JSXExpressionContainer") {
-    const expression = value?.expression;
+    if (value?.type === "Literal") {
+      if (typeof value.value !== "string") return []; // boolean, number, null, undefined, etc...
+      return format(value, value.value, value.raw);
+    }
 
-    if (!expression || expression?.type === "JSXEmptyExpression") return [];
+    if (value.type === "JSXExpressionContainer") {
+      const expression = value?.expression;
 
-    return extractTokensFromExpression(expression, runner);
-  }
+      if (!expression || expression?.type === "JSXEmptyExpression") return [];
 
-  if (value.type === "JSXElement" || value.type === "JSXSpreadChild") {
-    // JSXElement is like =>
+      return extractTokensFromExpression(expression, ctx, runner);
+    }
+
+    if (value.type === "JSXElement" || value.type === "JSXSpreadChild") {
+      return [];
+    }
+
     return [];
   }
+
+  if (is(node, "VariableDeclarator")) {
+    if (!node.init) return [];
+    return run(node.init);
+  }
+
+  if (is(node, "ArrowFunctionExpression")) return run(node);
 
   return [];
 }
@@ -44,10 +59,11 @@ type Exp = TSESTree.Expression | TSESTree.TemplateElement;
 
 function extractTokensFromExpression(
   exp: Exp,
+  ctx: Context,
   runner: "checker" | "fixer"
-): (Token | undefined)[] {
+): Token[] {
   const rerun = (expression: Exp) => {
-    return extractTokensFromExpression(expression, runner);
+    return extractTokensFromExpression(expression, ctx, runner);
   };
 
   // const isFixer = runner === "fixer";
@@ -71,11 +87,7 @@ function extractTokensFromExpression(
   }
 
   if (is(exp, "TemplateElement")) {
-    return format(
-      exp,
-      exp.value.cooked,
-      `\`${exp.value.raw}\``
-    );
+    return format(exp, exp.value.cooked, `\`${exp.value.raw}\``);
   }
 
   if (is(exp, "LogicalExpression")) {
@@ -135,9 +147,28 @@ function extractTokensFromExpression(
     return exp.quasi.quasis.flatMap((q) => rerun(q));
   }
 
-  if (is(exp, "Identifier") || is(exp, "MemberExpression")) {
+  if (is(exp, "Identifier")) {
     // We should follow the identifier and get the value
+    const scope = ctx.sourceCode.getScope(exp);
+    const binding = scope?.set.get(exp.name);
+    const node = binding?.defs[0].node;
+    if (!node) return [];
+
+    return extractTokensFromNode(node, ctx, runner);
+  }
+
+  if (is(exp, "MemberExpression")) {
     return [];
+  }
+
+  if (is(exp, "ArrowFunctionExpression")) {
+    if (is(exp.body, "BlockStatement")) {
+      const returnStatement = exp.body.body.find((s) =>
+        is(s, "ReturnStatement")
+      );
+      return returnStatement?.argument ? rerun(returnStatement.argument) : [];
+    }
+    return rerun(exp.body);
   }
 
   // if ((unsupported as typeof exp.type[]).includes(exp.type)) {
@@ -241,9 +272,9 @@ function callOrValue<T extends string, P>(
   return typeof func === "function" ? func(param!) : func;
 }
 
-function is<E extends Exp, T extends E["type"]>(
-  exp: Exp,
+function is<E extends Exp | TSESTree.Node, T extends E["type"]>(
+  exp: E,
   type: `${T}`
-): exp is Extract<Exp, { type: T }> {
+): exp is Extract<E, { type: T }> {
   return exp.type === type;
 }
