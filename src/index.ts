@@ -1,8 +1,6 @@
 import type { FlatConfig } from "@typescript-eslint/utils/ts-eslint";
 import { noPhysicalProperties } from "./rules/no-phyisical-properties/rule";
 
-var a = 2;
-
 const rtlFriendly = {
   meta: {
     name: "eslint-plugin-rtl-friendly",
