@@ -161,6 +161,7 @@ function extractTokensFromExpression(
     return [];
   }
 
+  /*
   if (is(exp, "ArrowFunctionExpression")) {
     if (is(exp.body, "BlockStatement")) {
       const returnStatement = exp.body.body.find((s) =>
@@ -170,6 +171,7 @@ function extractTokensFromExpression(
     }
     return rerun(exp.body);
   }
+  */
 
   // if ((unsupported as typeof exp.type[]).includes(exp.type)) {
   //   if (
@@ -208,27 +210,6 @@ function extractTokensFromExpression(
     console.log("Unimplemented: ", exp.type, exp);
     unimplemented.add(exp.type);
   }
-
-  // if (expression.type === "BinaryExpression") {
-  //   result.push(...extractFromExpression(expression.left));
-  //   result.push(...extractFromExpression(expression.right));
-  // }
-  // if (expression.type === "CallExpression") {
-  //   expression.arguments.forEach((arg) => {
-  //     if (arg.type === "SpreadElement") {
-  //       result.push(...extractFromExpression(arg.argument));
-  //     } else {
-  //       result.push(...extractFromExpression(arg));
-  //     }
-  //   });
-  // }
-  // if (expression.type === "ConditionalExpression") {
-  //   result.push(...extractFromExpression(expression.consequent));
-  //   result.push(...extractFromExpression(expression.alternate));
-  // }
-  // if (expression.type === "LogicalExpression") {
-  //   result.push(...extractFromExpression(expression.right));
-  // }
 
   return [];
 }
