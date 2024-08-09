@@ -4,7 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-rtl-friendly.svg)](https://www.npmjs.com/package/eslint-plugin-rtl-friendly)
 [![Downloads/month](https://img.shields.io/npm/dm/eslint-plugin-rtl-friendly.svg)](http://www.npmtrends.com/eslint-plugin-rtl-friendly)
-[![Tests](https://github.com/A7med3bdulBaset/eslint-plugin-rtl-friendly/actions/workflows/test.yml/badge.svg)](https://github.com/A7med3bdulBaset/eslint-plugin-rtl-friendly/actions/workflows/test.yml)
+[![CI](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/actions/workflows/ci.yml/badge.svg)](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/actions/workflows/ci.yml) 
 
 <!-- [![Build Status](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly.svg?branch=master)](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly)
 [![Coverage Status](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly/branch/master/graph/badge.svg)](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly) -->
