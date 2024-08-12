@@ -65,14 +65,14 @@ jobs:
                .join("\n")
               })
 
-            github.issues.removeLabel({
+            github.rest.issues.removeLabel({
               issue_number,
               owner,
               repo,
               name: 'release canary'
             });
 
-            github.issues.addLabels({
+            github.rest.issues.addLabels({
               issue_number,
               owner,
               repo,
