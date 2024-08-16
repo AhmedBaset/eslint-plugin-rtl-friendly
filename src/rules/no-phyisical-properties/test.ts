@@ -216,7 +216,16 @@ vitest.describe(RULE_NAME, () => {
   });
 
   tester.run("Look for variable decleration", noPhysicalProperties, {
-    valid: [],
+    valid: [
+      {
+        name: "function arg",
+        code: `
+          function Comp({className}) {
+            return <div className={cn(className)} />
+          }
+        `,
+      },
+    ],
     invalid: [
       {
         name: "className={variable}",
@@ -243,6 +252,105 @@ vitest.describe(RULE_NAME, () => {
           <div className={b} />
         `,
         errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        name: "let b = '...'",
+        code: `
+          let b = "text-left";
+          <div className={b} />
+        `,
+        output: `
+          let b = "text-start";
+          <div className={b} />
+        `,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        name: "let b = '...'; b = '...'",
+        code: `
+          let b = "text-left";
+          b = "text-right";
+          <div className={b} />
+        `,
+        output: `
+          let b = "text-start";
+          b = "text-end";
+          <div className={b} />
+        `,
+        errors: [
+          { messageId: NO_PHYSICAL_CLASSESS },
+          { messageId: NO_PHYSICAL_CLASSESS },
+        ],
+      },
+      {
+        name: "Outside the scope",
+        code: `
+          const cls = "left-2";
+          function Comp() {
+            return <div className={cls} />
+          }
+        `,
+        output: `
+          const cls = "start-2";
+          function Comp() {
+            return <div className={cls} />
+          }
+        `,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        name: "Reassignment in a nested scope",
+        code: `
+          let cls = "left-2";
+          function Comp() {
+            cls = "text-left";
+            return <div className={cls} />
+          }
+        `,
+        output: `
+          let cls = "start-2";
+          function Comp() {
+            cls = "text-start";
+            return <div className={cls} />
+          }
+        `,
+        errors: [
+          { messageId: NO_PHYSICAL_CLASSESS },
+          { messageId: NO_PHYSICAL_CLASSESS },
+        ],
+      },
+      {
+        name: "Don't conflict with other vars with the same name",
+        code: `
+          const cls = "left-2";
+          function Comp() {
+            const cls = "text-left";
+            return <div className={cls} />
+          }
+        `,
+        output: `
+          const cls = "left-2";
+          function Comp() {
+            const cls = "text-start";
+            return <div className={cls} />
+          }
+        `,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        name: "function arg",
+        code: `
+          function Comp({ className = "text-left" }) {
+            return <div className={cn(className)} />
+          }
+        `,
+        output: `
+          function Comp({ className = "text-start" }) {
+            return <div className={cn(className)} />
+          }
+        `,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        skip: true,
       },
     ],
   });

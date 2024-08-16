@@ -1,4 +1,5 @@
-import { TSESTree } from "@typescript-eslint/utils";
+import type { TSESTree } from "@typescript-eslint/utils";
+import type { Scope } from "@typescript-eslint/utils/ts-eslint";
 import type { Context } from "../rules/no-phyisical-properties/rule";
 
 const unimplemented = new Set<string>();
@@ -50,7 +51,7 @@ export function extractTokensFromNode(
     return run(node.init);
   }
 
-  if (is(node, "ArrowFunctionExpression")) return run(node);
+  // if (is(node, "ArrowFunctionExpression")) return run(node);
 
   return [];
 }
@@ -150,11 +151,12 @@ function extractTokensFromExpression(
   if (is(exp, "Identifier")) {
     // We should follow the identifier and get the value
     const scope = ctx.sourceCode.getScope(exp);
-    const binding = scope?.set.get(exp.name);
-    const node = binding?.defs[0].node;
-    if (!node) return [];
 
-    return extractTokensFromNode(node, ctx, runner);
+    const writes = getDefinitions(exp, ctx, scope).filter(
+      (r) => r?.type === "Literal" || r?.type === "Identifier"
+    );
+
+    return writes.flatMap((n) => rerun(n));
   }
 
   if (is(exp, "MemberExpression")) {
@@ -258,4 +260,25 @@ function is<E extends Exp | TSESTree.Node, T extends E["type"]>(
   type: `${T}`
 ): exp is Extract<E, { type: T }> {
   return exp.type === type;
+}
+
+function getDefinitions(
+  identifier: TSESTree.Identifier,
+  ctx: Context,
+  scope: Scope.Scope
+) {
+  const writes = scope.references
+    .filter((r) => r.identifier.name === identifier.name && r.writeExpr)
+    .flatMap((r) => r.writeExpr);
+
+  const defs = scope.set.get(identifier.name)?.defs ?? [];
+  if (!defs.length && scope.upper) {
+    const defs = getDefinitions(identifier, ctx, scope.upper);
+    writes.push(...defs);
+  }
+
+  if (writes.length) return writes;
+
+  if (scope.upper) return getDefinitions(identifier, ctx, scope.upper);
+  return [];
 }
