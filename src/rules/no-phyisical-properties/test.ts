@@ -352,6 +352,25 @@ vitest.describe(RULE_NAME, () => {
         errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
         skip: true,
       },
+      {
+        name: "Bug Report: Concating",
+        code: `
+          const base = "left-1";
+          const Comp = ({ className }) => {
+            return <span className={cn(base, className, "text-left")} />
+          };
+        `,
+        output: `
+          const base = "start-1";
+          const Comp = ({ className }) => {
+            return <span className={cn(base, className, "text-start")} />
+          };
+        `,
+        errors: [
+          {messageId: NO_PHYSICAL_CLASSESS},
+          {messageId: NO_PHYSICAL_CLASSESS},
+        ]
+      }
     ],
   });
 
