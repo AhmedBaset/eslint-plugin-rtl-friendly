@@ -1,6 +1,11 @@
 import { RuleTester } from "@typescript-eslint/rule-tester";
 import * as vitest from "vitest";
-import { NO_PHYSICAL_CLASSESS, RULE_NAME, noPhysicalProperties } from "./rule";
+import {
+  IDENTIFIER_USED,
+  NO_PHYSICAL_CLASSESS,
+  RULE_NAME,
+  noPhysicalProperties,
+} from "./rule";
 
 RuleTester.afterAll = vitest.afterAll;
 RuleTester.it = vitest.it;
@@ -215,7 +220,7 @@ vitest.describe(RULE_NAME, () => {
     ],
   });
 
-  tester.run("Look for variable decleration", noPhysicalProperties, {
+  tester.run("follow identifier decleration", noPhysicalProperties, {
     valid: [
       {
         name: "function arg",
@@ -237,7 +242,7 @@ vitest.describe(RULE_NAME, () => {
           const variable = "text-start";
           <div className={variable} />
         `,
-        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        errors: [{ messageId: IDENTIFIER_USED }],
       },
       {
         name: "const b = a; className={b}",
@@ -251,7 +256,7 @@ vitest.describe(RULE_NAME, () => {
           const b = a;
           <div className={b} />
         `,
-        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        errors: [{ messageId: IDENTIFIER_USED }],
       },
       {
         name: "let b = '...'",
@@ -263,7 +268,7 @@ vitest.describe(RULE_NAME, () => {
           let b = "text-start";
           <div className={b} />
         `,
-        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        errors: [{ messageId: IDENTIFIER_USED }],
       },
       {
         name: "let b = '...'; b = '...'",
@@ -278,8 +283,8 @@ vitest.describe(RULE_NAME, () => {
           <div className={b} />
         `,
         errors: [
-          { messageId: NO_PHYSICAL_CLASSESS },
-          { messageId: NO_PHYSICAL_CLASSESS },
+          { messageId: IDENTIFIER_USED },
+          { messageId: IDENTIFIER_USED },
         ],
       },
       {
@@ -296,7 +301,7 @@ vitest.describe(RULE_NAME, () => {
             return <div className={cls} />
           }
         `,
-        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        errors: [{ messageId: IDENTIFIER_USED }],
       },
       {
         name: "Reassignment in a nested scope",
@@ -315,13 +320,14 @@ vitest.describe(RULE_NAME, () => {
           }
         `,
         errors: [
-          { messageId: NO_PHYSICAL_CLASSESS },
-          { messageId: NO_PHYSICAL_CLASSESS },
+          { messageId: IDENTIFIER_USED },
+          { messageId: IDENTIFIER_USED },
         ],
       },
       {
         name: "Don't conflict with other vars with the same name",
         code: `
+          // this shouldn't error
           const cls = "left-2";
           function Comp() {
             const cls = "text-left";
@@ -329,13 +335,14 @@ vitest.describe(RULE_NAME, () => {
           }
         `,
         output: `
+          // this shouldn't error
           const cls = "left-2";
           function Comp() {
             const cls = "text-start";
             return <div className={cls} />
           }
         `,
-        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        errors: [{ messageId: IDENTIFIER_USED }],
       },
       {
         name: "function arg",
@@ -349,7 +356,7 @@ vitest.describe(RULE_NAME, () => {
             return <div className={cn(className)} />
           }
         `,
-        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        errors: [{ messageId: IDENTIFIER_USED }],
         skip: true,
       },
       {
@@ -367,10 +374,10 @@ vitest.describe(RULE_NAME, () => {
           };
         `,
         errors: [
-          {messageId: NO_PHYSICAL_CLASSESS},
-          {messageId: NO_PHYSICAL_CLASSESS},
-        ]
-      }
+          { messageId: IDENTIFIER_USED },
+          { messageId: NO_PHYSICAL_CLASSESS },
+        ],
+      },
     ],
   });
 

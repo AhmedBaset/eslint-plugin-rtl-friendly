@@ -1,6 +1,11 @@
 import type { TSESTree } from "@typescript-eslint/utils";
 import type { Scope } from "@typescript-eslint/utils/ts-eslint";
-import type { Context } from "../rules/no-phyisical-properties/rule";
+import {
+  IDENTIFIER_USED,
+  NO_PHYSICAL_CLASSESS,
+  type Context,
+  type MessageId,
+} from "../rules/no-phyisical-properties/rule";
 
 const unimplemented = new Set<string>();
 
@@ -11,6 +16,7 @@ export type Token = (
 ) & {
   getValue: () => string;
   getRaw: () => string;
+  messageId: MessageId;
 };
 
 export function extractTokensFromNode(
@@ -28,7 +34,7 @@ export function extractTokensFromNode(
 
     if (value?.type === "Literal") {
       if (typeof value.value !== "string") return []; // boolean, number, null, undefined, etc...
-      return format(value, value.value, value.raw);
+      return format(value, value.value, value.raw, NO_PHYSICAL_CLASSESS);
     }
 
     if (value.type === "JSXExpressionContainer") {
@@ -61,10 +67,13 @@ type Exp = TSESTree.Expression | TSESTree.TemplateElement;
 function extractTokensFromExpression(
   exp: Exp,
   ctx: Context,
-  runner: "checker" | "fixer"
+  runner: "checker" | "fixer",
+  { isIdentifier = false }: { isIdentifier?: boolean } = {}
 ): Token[] {
-  const rerun = (expression: Exp) => {
-    return extractTokensFromExpression(expression, ctx, runner);
+  const rerun = (expression: Exp, referenceIsIdentifier?: boolean) => {
+    return extractTokensFromExpression(expression, ctx, runner, {
+      isIdentifier: referenceIsIdentifier || isIdentifier,
+    });
   };
 
   // const isFixer = runner === "fixer";
@@ -75,7 +84,8 @@ function extractTokensFromExpression(
     return format(
       exp,
       () => exp.value,
-      () => exp.raw
+      () => exp.raw,
+      isIdentifier ? IDENTIFIER_USED : NO_PHYSICAL_CLASSESS
     );
   }
 
@@ -83,12 +93,18 @@ function extractTokensFromExpression(
     return format(
       exp.quasis,
       (q) => q.value.cooked,
-      (q) => `\`${q.value.raw}\``
+      (q) => `\`${q.value.raw}\``,
+      isIdentifier ? IDENTIFIER_USED : NO_PHYSICAL_CLASSESS
     );
   }
 
   if (is(exp, "TemplateElement")) {
-    return format(exp, exp.value.cooked, `\`${exp.value.raw}\``);
+    return format(
+      exp,
+      exp.value.cooked,
+      `\`${exp.value.raw}\``,
+      isIdentifier ? IDENTIFIER_USED : NO_PHYSICAL_CLASSESS
+    );
   }
 
   if (is(exp, "LogicalExpression")) {
@@ -156,7 +172,7 @@ function extractTokensFromExpression(
       (r) => r?.type === "Literal" || r?.type === "Identifier"
     );
 
-    return writes.flatMap((n) => rerun(n));
+    return writes.flatMap((n) => rerun(n, true));
   }
 
   if (is(exp, "MemberExpression")) {
@@ -224,13 +240,19 @@ function format<
 >(
   token: T | T[],
   getValue: string | ((t: T) => string),
-  getRaw: string | ((t: T) => string)
-): (T & { getValue: () => string; getRaw: () => string })[] {
+  getRaw: string | ((t: T) => string),
+  messageId: MessageId
+): (T & {
+  getValue: () => string;
+  getRaw: () => string;
+  messageId: MessageId;
+})[] {
   if (Array.isArray(token)) {
     return token.map((t) => ({
       ...t,
       getValue: () => callOrValue(getValue, t),
       getRaw: () => callOrValue(getRaw, t),
+      messageId,
     }));
   }
 
@@ -239,6 +261,7 @@ function format<
       ...token,
       getValue: () => callOrValue(getValue, token),
       getRaw: () => callOrValue(getRaw, token),
+      messageId,
     },
   ] as const;
 }

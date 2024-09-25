@@ -16,10 +16,12 @@ import { parseForPhysicalClasses } from "../../utils/tailwind.js";
 // });
 
 export const RULE_NAME = "no-physical-properties";
-export const NO_PHYSICAL_CLASSESS = "NO_PHYSICAL_CLASSESS";
-type NO_PHYSICAL_CLASSESS = typeof NO_PHYSICAL_CLASSESS;
 
-export const noPhysicalProperties: RuleModule<NO_PHYSICAL_CLASSESS> = {
+export const NO_PHYSICAL_CLASSESS = "NO_PHYSICAL_CLASSESS";
+export const IDENTIFIER_USED = "IDENTIFIER_USED";
+export type MessageId = "NO_PHYSICAL_CLASSESS" | "IDENTIFIER_USED";
+
+export const noPhysicalProperties: RuleModule<MessageId> = {
   // name: RULE_NAME,
   defaultOptions: [],
   meta: {
@@ -30,8 +32,8 @@ export const noPhysicalProperties: RuleModule<NO_PHYSICAL_CLASSESS> = {
     },
     fixable: "code",
     messages: {
-      // eslint-disable-next-line eslint-plugin/no-unused-message-ids
       [NO_PHYSICAL_CLASSESS]: `Avoid using physical properties such as "{{ invalid }}". Instead, use logical properties like "{{ valid }}" for better RTL support.`,
+      [IDENTIFIER_USED]: `This text is used later as a class name but contains physical properties such as "{{ invalid }}". It's better to use logical properties like "{{ valid }}" for improved RTL support.`,
     },
     schema: [],
   },
@@ -74,14 +76,23 @@ export const noPhysicalProperties: RuleModule<NO_PHYSICAL_CLASSESS> = {
           const valid = parsed.map((p) => p.valid).join(" ");
 
           // cache.set(classesAsString, valid);
-          report({ ctx, node, invalid, valid, token: token ?? null });
+          report({
+            ctx,
+            node,
+            messageId: token.messageId,
+            invalid,
+            valid,
+            token: token ?? null,
+          });
         });
       },
     };
   },
 };
 
-export type Context = Readonly<RuleContext<"NO_PHYSICAL_CLASSESS", []>>;
+export type Context = Readonly<
+  RuleContext<"NO_PHYSICAL_CLASSESS" | "IDENTIFIER_USED", []>
+>;
 
 function report({
   ctx,
@@ -89,7 +100,9 @@ function report({
   valid,
   node,
   token,
+  messageId,
 }: {
+  messageId: MessageId;
   ctx: Context;
   node: TSESTree.JSXAttribute;
   invalid: string;
@@ -98,7 +111,7 @@ function report({
 }) {
   return ctx.report({
     node,
-    messageId: NO_PHYSICAL_CLASSESS,
+    messageId,
     data: {
       invalid,
       valid,
