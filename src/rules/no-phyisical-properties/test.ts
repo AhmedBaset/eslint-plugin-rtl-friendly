@@ -57,7 +57,7 @@ vitest.describe(RULE_NAME, () => {
       },
       {
         name: "JSXNamespacedName",
-        code: `<svg:circle cx="50" cy="50" r="40" prop="pl-1 mr-2" />`,
+        code: `<svg:circle cx="50" cy="50" r="40" prop:class="pl-1 mr-2" />`,
       },
     ],
     invalid: [

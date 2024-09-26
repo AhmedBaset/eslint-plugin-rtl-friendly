@@ -5,7 +5,7 @@ import {
   NO_PHYSICAL_CLASSESS,
   type Context,
   type MessageId,
-} from "../rules/no-phyisical-properties/rule";
+} from "../rules/no-phyisical-properties/rule.js";
 
 const unimplemented = new Set<string>();
 

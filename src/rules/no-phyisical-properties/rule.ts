@@ -107,7 +107,7 @@ function report({
   node: TSESTree.JSXAttribute;
   invalid: string;
   valid: string;
-  token: Token | null;
+  token: Token;
 }) {
   return ctx.report({
     node,
@@ -117,12 +117,10 @@ function report({
       valid,
     },
     loc: {
-      start: token?.loc?.start ?? node.loc!.start,
-      end: token?.loc?.end ?? node.loc!.end,
+      start: token?.loc?.start,
+      end: token?.loc?.end,
     },
     fix: (fixer) => {
-      if (!token) return null;
-
       return fixer.replaceText(token, token?.getRaw()?.replace(invalid, valid));
     },
   });
