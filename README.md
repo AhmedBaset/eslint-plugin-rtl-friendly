@@ -2,6 +2,9 @@
 
 Helps you write code that works the same for both LTR and RTL languages.
 
+> [!IMPORTANT]
+> Until `1.0.0` is released, this plugin is in Beta.
+
 <div align="center">
 
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-rtl-friendly.svg)](https://www.npmjs.com/package/eslint-plugin-rtl-friendly)
@@ -101,7 +104,7 @@ $ pnpm add -D eslint-plugin-rtl-friendly]
 
 ### Requirements
 
-- ESLint (Flat Config)
+- ESLint >= V9 (Flat Config)
 - Tailwindcss [V3.3.0](https://tailwindcss.com/blog/tailwindcss-v3-3#simplified-rtl-support-with-logical-properties) or higher
 
 ```js
