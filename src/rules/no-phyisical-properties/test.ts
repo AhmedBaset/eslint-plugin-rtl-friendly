@@ -51,6 +51,14 @@ vitest.describe(RULE_NAME, () => {
         name: 'className={isCondition && "..."}',
         code: `<div className={isCondition ? "ps-1 text-end me-2" : "pe-1 text-start ms-2"} />`,
       },
+      {
+        name: "Not a className attribute",
+        code: `<div prop="pl-1 mr-2" />`,
+      },
+      {
+        name: "JSXNamespacedName",
+        code: `<svg:circle cx="50" cy="50" r="40" prop="pl-1 mr-2" />`,
+      },
     ],
     invalid: [
       {

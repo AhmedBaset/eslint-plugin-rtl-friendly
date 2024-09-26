@@ -82,7 +82,7 @@ export const noPhysicalProperties: RuleModule<MessageId> = {
             messageId: token.messageId,
             invalid,
             valid,
-            token: token ?? null,
+            token,
           });
         });
       },
