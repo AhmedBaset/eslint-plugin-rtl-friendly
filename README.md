@@ -1,19 +1,26 @@
 # eslint-plugin-rtl-friendly
 
+Helps you write code that works the same for both LTR and RTL languages.
+
 <div align="center">
 
 [![npm version](https://img.shields.io/npm/v/eslint-plugin-rtl-friendly.svg)](https://www.npmjs.com/package/eslint-plugin-rtl-friendly)
 [![Downloads/month](https://img.shields.io/npm/dm/eslint-plugin-rtl-friendly.svg)](http://www.npmtrends.com/eslint-plugin-rtl-friendly)
-[![CI](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/actions/workflows/ci.yml/badge.svg)](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/actions/workflows/ci.yml) 
+[![CI](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/actions/workflows/ci.yml/badge.svg)](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/actions/workflows/ci.yml)
 
 <!-- [![Build Status](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly.svg?branch=master)](https://travis-ci.org/mysticatea/eslint-plugin-rtl-friendly)
 [![Coverage Status](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly/branch/master/graph/badge.svg)](https://codecov.io/gh/mysticatea/eslint-plugin-rtl-friendly) -->
 
 </div>
 
-With a global audience that includes over 800 million people speaking right-to-left (RTL) languages, catering to RTL readability is crucial for international web apps. The **eslint-plugin-rtl-friendly** is a linter that helps you write RTL-friendly code.
+<details>
+<summary
+  style="font-size: 1.5em; font-weight: bold; margin-block: 1em;"
+>Why RTL matters? <span style="font-size: 0.5em; font-weight: normal;">(Click to expand)</span></summary>
 
-## Why does RTL matter?
+With a global audience of over 800 million people who speak right-to-left (RTL) languages, ensuring RTL readability is essential for international web apps. The **eslint-plugin-rtl-friendly** is a linter that helps you write RTL-friendly code.
+
+## Why RTL matters?
 
 ```md
 You read this text from left to right.
@@ -27,40 +34,36 @@ However, texts in RTL languages are read from right to left.
 </pre>
 </div>
 
-Notice how GitHub's markdown aligns the text to the right. It's not a bug; that's how RTL languages are read.
+Notice how GitHub's markdown aligns the text to the right. This isn’t a bug—it's how RTL languages are read.
 
-Let's imagine you're writing code using the old way, and you're, for example, creating a button with text and an icon:
+Imagine you're writing code the traditional way, creating a button with text and an icon:
 
 ```jsx
 return (
   <button>
     <CheckIcon className="mr-2" />
-    <span>{getTranslation('buttons.done')}</span>
+    <span>{getTranslation("buttons.done")}</span>
   </button>
 );
 ```
 
-The previous code will work fine for LTR languages, but for RTL languages, the icon will be on the right side of the text, just like the margin (mr-2), which means there won't be any space between the icon and the text and extra space at the beggining of the button.
+The code above will work fine for LTR languages, but for RTL languages, the icon will appear on the right side of the text, just like the margin (`mr-2`). This means there will be no space between the icon and the text, and there will be extra space at the start of the button.
 
 ```jsx
 LTR: [{icon} {text}]
 RTL: [{text}{icon} ]
 ```
 
-The trick here is to use `me-2` instead of `mr-2`. `me-2` stands for `margin-inline-end`, which means right in LTR languages and left in RTL languages. So, the code should be:
+The solution is to use `me-2` instead of `mr-2`. `me-2` stands for `margin-inline-end`, which means "right" in LTR languages and "left" in RTL languages. The updated code should be:
 
 ```jsx
 return (
   <button>
     <CheckIcon className="me-2" />
-    <span>{getTranslation('buttons.done')}</span>
+    <span>{getTranslation("buttons.done")}</span>
   </button>
 );
 ```
-
-Up to this point, this plugin only reports a warning (with auto-fix) when using tailwindcss physical properties like `pl-*`, `mr-*`, `text-left`, `left-*`, `border-l-*`, `rounded-r-*`, etc. Instead, you should use their logical properties like `ps-*`, `ms-*`, `text-start`, `start-*`, `border-start-*`, `rounded-start-*`, etc. You can read more about [logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Logical_Properties) or [tailwindcss logical properties support](https://tailwindcss.com/blog/tailwindcss-v3-3#simplified-rtl-support-with-logical-properties) or [our documentation](./docs/rules/no-physical-properties.md).
-
-![demo](/.github/assets/vscode-demo.png)
 
 ## RTL languages:
 
@@ -79,58 +82,48 @@ Up to this point, this plugin only reports a warning (with auto-fix) when using 
 - (uz-Af) Uzbeki Afghanistan - ازبیک
 - (yi) Yiddish - ייִדיש
 
-> The orange areas on the map below show where RTL languages are spoken.
+> The orange areas on the map below show where RTL languages are spoken.  
 > ![map](/.github/assets/languages-map.png)
+
+</details>
+
+Currently, the plugin has [one rule](/src/rules/no-phyisical-properties/README.md) for Tailwind classes (Feel free to contribute!). It reports and auto-fixes the usage of physical properties classes to their [logical counterparts](https://tailwindcss.com/blog/tailwindcss-v3-3#simplified-rtl-support-with-logical-properties).
+
+![demo](/.github/assets/vscode-demo.png)
+
+The plugin comes with `--fix` support out of the box. Run `eslint . --fix` and it will automatically fix the issues regardless of how your classes are written. as simple as `className="pl-1 mr-2"` or `className={clsx(some && "ps-1", {"me-2": isOpen})}` or even referencing a variable `className={variable}` (It will report where variable is declared). Have a look at [this test file](/src/rules/no-phyisical-properties/test.ts) to see what it can fix and what it won't. If you find a case that it doesn't handle, please [open an issue](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/issues/new).
 
 ## Installation
 
 ```bash
-# using pnpm
-$ pnpm add -D eslint eslint-plugin-rtl-friendly
-# using yarn
-$ yarn add -D eslint eslint-plugin-rtl-friendly
-# using npm
-$ npm install --save-dev eslint eslint-plugin-rtl-friendly
+$ pnpm add -D eslint-plugin-rtl-friendly]
 ```
 
 ### Requirements
 
-- ESLint
+- ESLint (Flat Config)
 - Tailwindcss [V3.3.0](https://tailwindcss.com/blog/tailwindcss-v3-3#simplified-rtl-support-with-logical-properties) or higher
 
-## Usage
-
-Write your config file such as `.eslintrc.js`.
-
 ```js
-module.exports = {
+import rtlFriendly from "eslint-plugin-rtl-friendly";
+
+export default [
   // ...
-  plugins: ['rtl-friendly'],
-  // extend our recommended config
-  extends: ['plugin:rtl-friendly/recommended'],
-  // or add the rules you want to use
-  rules: {
-    'rtl-friendly/no-physical-properties': 'warn',
+  rtlFriendly.configs.recommended,
+  // More aggressive?
+  {
+    rules: {
+      "rtl-friendly/no-physical-properties": "error",
+    },
   },
-  // ...
-};
+];
 ```
 
-See also [Configuring ESLint](https://eslint.org/docs/user-guide/configuring).
+### Rules
 
-## Configs
-
-- `rtl-friendly/recommended` ... enables the recommended rules.
-
-## Rules
-
-<!--RULE_TABLE_BEGIN-->
-
-### suggestion
-
-| Rule ID                                                                       | Description                              |       |
-| :---------------------------------------------------------------------------- | :--------------------------------------- | :---: |
-| [rtl-friendly/no-physical-properties](./docs/rules/no-physical-properties.md) | Encourage the use of RTL-friendly styles | ⭐️✒️ |
+| Rule ID                                                                       | `--fix` support |
+| :---------------------------------------------------------------------------- | :-------------: |
+| [rtl-friendly/no-physical-properties](./docs/rules/no-physical-properties.md) |       ✅        |
 
 <!--RULE_TABLE_END-->
 
@@ -141,9 +134,8 @@ Welcome your contribution!
 ## TODO:
 
 - [x] Tailwindcss physical properties to logical properties
-- [ ] Add support for advanced className like `cn('pl-2', {...})`[.](https://github.com/francoismassart/eslint-plugin-tailwindcss/blob/6b6c0dd28e123cc118bff83654f951f736fa58e8/lib/rules/no-arbitrary-value.js#L169)
-- [ ] Strict `<html>` to have dir attribute depending on a codition or whatever detecting the language
-- [ ] Strict `<code>` to have `dir="ltr"` to override the parent's direction
-- [ ] in the future maybe throw a warning that `letter-spacing` doesn't work well with RTL languages to disable it in rtl `rtl:***` (NOT SURE)
-- [ ] text-opacity like the previous one
-- [Some resources](https://rtlstyling.com/posts/rtl-styling)
+- [x] Add support for advanced className like `cn('pl-2', {...})`
+- [ ] Add support for Template Literals tw`... ${...}`
+- [ ] New rule: `dir-attribute` to enforce `dir` in `<html>` and `<code>` tags
+- [ ] `letter-spacing` doesn't work well with RTL languages to disable it in rtl languages, we should warn to disable it in rtl `rtl:***` (NOT SURE) - some other cases like `absolute start-0 -translate-x-1/2` - `space-x-*`
+- [Resources](https://rtlstyling.com/posts/rtl-styling)

@@ -5,7 +5,7 @@ import {
   NO_PHYSICAL_CLASSESS,
   RULE_NAME,
   noPhysicalProperties,
-} from "./rule";
+} from "./rule.js";
 
 RuleTester.afterAll = vitest.afterAll;
 RuleTester.it = vitest.it;
