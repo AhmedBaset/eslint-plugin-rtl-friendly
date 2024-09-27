@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import { extractTokensFromNode } from "./ast.js";
-import type { Context } from "../rules/no-phyisical-properties/rule.js";
+import type { Context } from "./rule.js";
 import type { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 
 describe("ast", () => {

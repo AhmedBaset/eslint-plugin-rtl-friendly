@@ -3,8 +3,8 @@ import type {
   RuleContext,
   RuleModule,
 } from "@typescript-eslint/utils/ts-eslint";
-import { type Token, extractTokensFromNode } from "../../utils/ast.js";
-import { parseForPhysicalClasses } from "../../utils/tailwind.js";
+import { type Token, extractTokensFromNode } from "./ast.js";
+import { parseForPhysicalClasses } from "./tailwind.js";
 
 // const cache = new Map<
 //   /** invalid */ string,
