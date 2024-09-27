@@ -1,4 +1,4 @@
-# eslint-plugin-rtl-friendly
+# eslint-plugin-rtl-friendly (Canary)
 
 Helps you write code that works the same for both LTR and RTL languages.
 
