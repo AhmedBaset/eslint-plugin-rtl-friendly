@@ -72,16 +72,12 @@ export const noPhysicalProperties: RuleModule<MessageId> = {
           const isInvalid = parsed.some((p) => p.isInvalid);
           if (!isInvalid) return;
 
-          const invalid = parsed.map((p) => p.original).join(" ");
-          const valid = parsed.map((p) => p.valid).join(" ");
-
           // cache.set(classesAsString, valid);
           report({
             ctx,
             node,
             messageId: token.messageId,
-            invalid,
-            valid,
+            parsed,
             token,
           });
         });
@@ -96,8 +92,7 @@ export type Context = Readonly<
 
 function report({
   ctx,
-  invalid,
-  valid,
+  parsed,
   node,
   token,
   messageId,
@@ -105,23 +100,36 @@ function report({
   messageId: MessageId;
   ctx: Context;
   node: TSESTree.JSXAttribute;
-  invalid: string;
-  valid: string;
   token: Token;
+  parsed: ReturnType<typeof parseForPhysicalClasses>;
 }) {
   return ctx.report({
     node,
     messageId,
     data: {
-      invalid,
-      valid,
+      invalid: parsed
+        .filter((c) => c.isInvalid)
+        .map((c) => c.original)
+        .join(" "),
+      valid: parsed
+        .filter((c) => c.isInvalid)
+        .map((c) => c.valid)
+        .join(" "),
     },
     loc: {
       start: token?.loc?.start,
       end: token?.loc?.end,
     },
     fix: (fixer) => {
-      return fixer.replaceText(token, token?.getRaw()?.replace(invalid, valid));
+      return fixer.replaceText(
+        token,
+        token
+          ?.getRaw()
+          ?.replace(
+            parsed.map((p) => p.original).join(" "),
+            parsed.map((p) => p.valid).join(" ")
+          )
+      );
     },
   });
 }

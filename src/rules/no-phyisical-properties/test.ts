@@ -6,6 +6,7 @@ import {
   RULE_NAME,
   noPhysicalProperties,
 } from "./rule.js";
+import type { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 RuleTester.afterAll = vitest.afterAll;
 RuleTester.it = vitest.it;
@@ -75,9 +76,31 @@ vitest.describe(RULE_NAME, () => {
         code: `<div className="pl-1 extra-class mr-2"><span class="pl-2 extra-class pr-2">text</span></div>`,
         output: `<div className="ps-1 extra-class me-2"><span class="ps-2 extra-class pe-2">text</span></div>`,
         errors: [
-          { messageId: NO_PHYSICAL_CLASSESS },
-          { messageId: NO_PHYSICAL_CLASSESS },
+          {
+            messageId: NO_PHYSICAL_CLASSESS,
+            data: { invalid: "pl-1 mr-2", valid: "ps-1 me-2" },
+          },
+          {
+            messageId: NO_PHYSICAL_CLASSESS,
+            data: { invalid: "pl-2 pr-2", valid: "ps-2 pe-2" },
+          },
         ],
+      },
+      {
+        name: "should only include unvalid class names in the error message",
+        code: `<div className="pl-1 flex-center text-left">text</div>`,
+        errors: [
+          {
+            messageId: NO_PHYSICAL_CLASSESS,
+            data: { invalid: "pl-1 text-left", valid: "ps-1 text-start" },
+            line: 1,
+            column: 16,
+            endLine: 1,
+            endColumn: 44,
+            type: "JSXAttribute" as AST_NODE_TYPES.JSXAttribute,
+          },
+        ],
+        output: `<div className="ps-1 flex-center text-start">text</div>`,
       },
       {
         name: `className={"..."}`,
