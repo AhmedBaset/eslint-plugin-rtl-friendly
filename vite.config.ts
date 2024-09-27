@@ -4,9 +4,10 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   cacheDir: path.resolve(__dirname, "./node_modules/.cache/vitest"),
   test: {
-    include: ["src/**/test.ts"],
+    include: ["src/**/test.ts", "src/**/*.test.ts"],
     coverage: {
       include: ["src/**"],
     },
+    slowTestThreshold: 10,
   },
 });

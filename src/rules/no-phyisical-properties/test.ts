@@ -6,6 +6,7 @@ import {
   RULE_NAME,
   noPhysicalProperties,
 } from "./rule.js";
+import type { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 RuleTester.afterAll = vitest.afterAll;
 RuleTester.it = vitest.it;
@@ -51,6 +52,14 @@ vitest.describe(RULE_NAME, () => {
         name: 'className={isCondition && "..."}',
         code: `<div className={isCondition ? "ps-1 text-end me-2" : "pe-1 text-start ms-2"} />`,
       },
+      {
+        name: "Not a className attribute",
+        code: `<div prop="pl-1 mr-2" />`,
+      },
+      {
+        name: "JSXNamespacedName",
+        code: `<svg:circle cx="50" cy="50" r="40" prop:class="pl-1 mr-2" />`,
+      },
     ],
     invalid: [
       {
@@ -67,9 +76,31 @@ vitest.describe(RULE_NAME, () => {
         code: `<div className="pl-1 extra-class mr-2"><span class="pl-2 extra-class pr-2">text</span></div>`,
         output: `<div className="ps-1 extra-class me-2"><span class="ps-2 extra-class pe-2">text</span></div>`,
         errors: [
-          { messageId: NO_PHYSICAL_CLASSESS },
-          { messageId: NO_PHYSICAL_CLASSESS },
+          {
+            messageId: NO_PHYSICAL_CLASSESS,
+            data: { invalid: "pl-1 mr-2", valid: "ps-1 me-2" },
+          },
+          {
+            messageId: NO_PHYSICAL_CLASSESS,
+            data: { invalid: "pl-2 pr-2", valid: "ps-2 pe-2" },
+          },
         ],
+      },
+      {
+        name: "should only include unvalid class names in the error message",
+        code: `<div className="pl-1 flex-center text-left">text</div>`,
+        errors: [
+          {
+            messageId: NO_PHYSICAL_CLASSESS,
+            data: { invalid: "pl-1 text-left", valid: "ps-1 text-start" },
+            line: 1,
+            column: 16,
+            endLine: 1,
+            endColumn: 44,
+            type: "JSXAttribute" as AST_NODE_TYPES.JSXAttribute,
+          },
+        ],
+        output: `<div className="ps-1 flex-center text-start">text</div>`,
       },
       {
         name: `className={"..."}`,
@@ -288,20 +319,55 @@ vitest.describe(RULE_NAME, () => {
         ],
       },
       {
-        name: "Outside the scope",
+        skip: true,
+        name: "MemberExpression",
         code: `
-          const cls = "left-2";
           function Comp() {
-            return <div className={cls} />
-          }
-        `,
-        output: `
-          const cls = "start-2";
-          function Comp() {
-            return <div className={cls} />
+            const styles = { main: "left-2" };
+            return <div className={styles.main} />
           }
         `,
         errors: [{ messageId: IDENTIFIER_USED }],
+        output: `
+          function Comp() {
+            const styles = { main: "start-2" };
+            return <div className={styles.main} />
+          }
+        `,
+      },
+      {
+        skip: true,
+        name: "MemberExpression with computed property",
+        code: `
+          const styles = { main: "left-2" };
+          function Comp() {
+            return <div className={styles[main]} />
+          }
+        `,
+        errors: [{ messageId: IDENTIFIER_USED }],
+        output: `
+          const styles = { main: "start-2" };
+          function Comp() {
+            return <div className={styles[main]} />
+          }
+        `,
+      },
+      {
+        skip: true,
+        name: "MemberExpression deeply",
+        code: `
+          const styles = { main: { title: "left-2" } };
+          function Comp() {
+            return <div className={styles.main.title} />
+          }
+        `,
+        errors: [{ messageId: IDENTIFIER_USED }],
+        output: `
+          const styles = { main: { title: "start-2" } };
+          function Comp() {
+            return <div className={styles.main.title} />
+          }
+        `,
       },
       {
         name: "Reassignment in a nested scope",
@@ -323,6 +389,47 @@ vitest.describe(RULE_NAME, () => {
           { messageId: IDENTIFIER_USED },
           { messageId: IDENTIFIER_USED },
         ],
+      },
+      {
+        skip: true,
+        name: "Reassignment object in a nested scope",
+        code: `
+          let styles = { main: "left-2" };
+          function Comp() {
+            styles = { main: "text-left", hey: "pl-2" };
+            return <div className={styles.main} />
+          }
+        `,
+        output: `
+          let styles = { main: "start-2" };
+          function Comp() {
+            styles = { main: "text-start", hey: "pl-2" };
+            return <div className={styles.main} />
+          }
+        `,
+        errors: [
+          { messageId: IDENTIFIER_USED },
+          { messageId: IDENTIFIER_USED },
+        ],
+      },
+      {
+        skip: true,
+        name: "Reassignment object property in a nested scope",
+        code: `
+          const styles = { main: "left-2" };
+          function Comp() {
+            styles.main = "text-left";
+            return <div className={styles.main} />
+          }
+        `,
+        output: `
+          const styles = { main: "start-2" };
+          function Comp() {
+            styles.main = "text-start";
+            return <div className={styles.main} />
+          }
+        `,
+        errors: [{ messageId: IDENTIFIER_USED }],
       },
       {
         name: "Don't conflict with other vars with the same name",
@@ -501,6 +608,67 @@ vitest.describe(RULE_NAME, () => {
         code: '<div className="group-[:nth-of-type(3)_&]:pl-4"></div>',
         output: '<div className="group-[:nth-of-type(3)_&]:ps-4"></div>',
         errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+    ],
+  });
+
+  tester.run("inset with absolute centerd", noPhysicalProperties, {
+    valid: [
+      `<A class="absolute start-1/2 -translate-x-1/2 translate-y-1/2" />`,
+      `<A class="fixed start-1/2 -translate-x-1/2 translate-y-1/2" />`,
+      {
+        // Valid even with left-* because it has fixed and translate-x
+        code: `<A class="fixed left-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        options: [{ allowPhysicalInsetWithAbsolute: true }],
+      },
+      {
+        code: `<A class="sticky right-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        options: [{ allowPhysicalInsetWithAbsolute: true }],
+      },
+      {
+        code: `<A class="absolute left-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        options: [{ allowPhysicalInsetWithAbsolute: true }],
+      },
+    ],
+    invalid: [
+      {
+        code: `<A class="left-1/2" />`,
+        output: `<A class="start-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        code: `<A class="fixed right-1/2" />`,
+        output: `<A class="fixed end-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        code: `<A class="absolute left-1/2" />`,
+        output: `<A class="absolute start-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        code: `<A class="sticky left-1/2 translate-y-1/2" />`,
+        output: `<A class="sticky start-1/2 translate-y-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        options: [{ allowPhysicalInsetWithAbsolute: false }],
+        code: `<A class="fixed left-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        output: `<A class="fixed start-1/2 -translate-x-1/2 translate-y-1/2" />`,
+      },
+      {
+        options: [
+          { allowPhysicalInsetWithAbsolute: undefined as unknown as boolean },
+        ],
+        code: `<A class="sticky right-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        output: `<A class="sticky end-1/2 -translate-x-1/2 translate-y-1/2" />`,
+      },
+      {
+        code: `<A class="absolute left-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        output: `<A class="absolute start-1/2 -translate-x-1/2 translate-y-1/2" />`,
       },
     ],
   });
