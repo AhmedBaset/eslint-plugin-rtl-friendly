@@ -611,4 +611,65 @@ vitest.describe(RULE_NAME, () => {
       },
     ],
   });
+
+  tester.run("inset with absolute centerd", noPhysicalProperties, {
+    valid: [
+      `<A class="absolute start-1/2 -translate-x-1/2 translate-y-1/2" />`,
+      `<A class="fixed start-1/2 -translate-x-1/2 translate-y-1/2" />`,
+      {
+        // Valid even with left-* because it has fixed and translate-x
+        code: `<A class="fixed left-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        options: [{ allowPhysicalInsetWithAbsolute: true }],
+      },
+      {
+        code: `<A class="sticky right-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        options: [{ allowPhysicalInsetWithAbsolute: true }],
+      },
+      {
+        code: `<A class="absolute left-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        options: [{ allowPhysicalInsetWithAbsolute: true }],
+      },
+    ],
+    invalid: [
+      {
+        code: `<A class="left-1/2" />`,
+        output: `<A class="start-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        code: `<A class="fixed right-1/2" />`,
+        output: `<A class="fixed end-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        code: `<A class="absolute left-1/2" />`,
+        output: `<A class="absolute start-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        code: `<A class="sticky left-1/2 translate-y-1/2" />`,
+        output: `<A class="sticky start-1/2 translate-y-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+      },
+      {
+        options: [{ allowPhysicalInsetWithAbsolute: false }],
+        code: `<A class="fixed left-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        output: `<A class="fixed start-1/2 -translate-x-1/2 translate-y-1/2" />`,
+      },
+      {
+        options: [
+          { allowPhysicalInsetWithAbsolute: undefined as unknown as boolean },
+        ],
+        code: `<A class="sticky right-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        output: `<A class="sticky end-1/2 -translate-x-1/2 translate-y-1/2" />`,
+      },
+      {
+        code: `<A class="absolute left-1/2 -translate-x-1/2 translate-y-1/2" />`,
+        errors: [{ messageId: NO_PHYSICAL_CLASSESS }],
+        output: `<A class="absolute start-1/2 -translate-x-1/2 translate-y-1/2" />`,
+      },
+    ],
+  });
 });

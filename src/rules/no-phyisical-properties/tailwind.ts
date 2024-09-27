@@ -3,8 +3,8 @@ export const twLogicalClasses = [
   { physical: "mr-", /*        */ logical: "me-" },
   { physical: "pl-", /*        */ logical: "ps-" },
   { physical: "pr-", /*        */ logical: "pe-" },
-  { physical: "left-", /*      */ logical: "start-" },
-  { physical: "right-", /*     */ logical: "end-" },
+  { physical: "left-", /*      */ logical: "start-", if: isNotAbsoluteCenterd },
+  { physical: "right-", /*     */ logical: "end-", if: isNotAbsoluteCenterd },
   { physical: "text-left", /*  */ logical: "text-start" },
   { physical: "text-right", /* */ logical: "text-end" },
   { physical: "border-l-", /*  */ logical: "border-s-" },
@@ -19,7 +19,11 @@ export const twLogicalClasses = [
   { physical: "scroll-mr-", /* */ logical: "scroll-me-" },
   { physical: "scroll-pl-", /* */ logical: "scroll-ps-" },
   { physical: "scroll-pr-", /* */ logical: "scroll-pe-" },
-] satisfies { physical: string; logical: string }[];
+] satisfies {
+  physical: string;
+  logical: string;
+  if?: (className: string) => boolean;
+}[];
 
 export function tailwindClassCases(cls: string) {
   return [
@@ -33,11 +37,35 @@ export function tailwindClassCases(cls: string) {
   ];
 }
 
-const allCases = twLogicalClasses.flatMap(({ physical, logical }) =>
-  tailwindClassCases(physical).map((regex) => ({ regex, physical, logical }))
-);
+function getAllCases(
+  className: string,
+  allowPhysicalInsetWithAbsolute: boolean
+) {
+  return twLogicalClasses.flatMap((cls) => {
+    const shouldValidate = allowPhysicalInsetWithAbsolute
+      ? cls.if?.(className) ?? true
+      : true;
+    if (!shouldValidate) return [];
 
-export function parseForPhysicalClasses(classes: string[]) {
+    const { physical, logical } = cls;
+    return tailwindClassCases(physical).map((regex) => {
+      return {
+        regex,
+        physical,
+        logical,
+      };
+    });
+  });
+}
+
+export function parseForPhysicalClasses(
+  className: string,
+  allowPhysicalInsetWithAbsolute: boolean
+) {
+  const allCases = getAllCases(className, allowPhysicalInsetWithAbsolute);
+
+  const classes = className.split(" ");
+
   return classes.map((cls) => {
     const isInvalid = allCases.some(({ regex }) => regex.test(cls));
     const valid = allCases.reduce(
@@ -63,4 +91,13 @@ export function parseForPhysicalClasses(classes: string[]) {
   //   };
   // });
   // });
+}
+
+function isNotAbsoluteCenterd(className: string) {
+  return !["absolute", "fixed", "sticky"].some((c) => {
+    // We match absolute-CENTERED not every absolute position
+    // We encourage the usage of logical properties with positioning except for valid
+    // cases like center with fixed/absolute
+    return className.includes(c) && className.includes("translate-x");
+  });
 }

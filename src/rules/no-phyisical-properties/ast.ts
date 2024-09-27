@@ -23,7 +23,7 @@ export function extractTokensFromNode(
   // node: TSESTree.JSXAttribute,
   node: TSESTree.Node,
   ctx: Context,
-  runner: "checker" | "fixer"
+  { debug }: { debug: boolean }
 ): Token[] {
   if (node.type === "JSXAttribute") {
     // value: Literal | JSXExpressionContainer | JSXElement | JSXFragment | null
@@ -40,7 +40,7 @@ export function extractTokensFromNode(
 
       if (!expression || expression?.type === "JSXEmptyExpression") return [];
 
-      return extractTokensFromExpression(expression, ctx, runner);
+      return extractTokensFromExpression(expression, ctx, { debug });
     }
 
     // if (value.type === "JSXElement" || value.type === "JSXSpreadChild") {
@@ -66,12 +66,15 @@ type Exp = TSESTree.Expression | TSESTree.TemplateElement;
 function extractTokensFromExpression(
   exp: Exp,
   ctx: Context,
-  runner: "checker" | "fixer",
-  { isIdentifier = false }: { isIdentifier?: boolean } = {}
+  {
+    isIdentifier = false,
+    debug,
+  }: { isIdentifier?: boolean; debug?: boolean } = {}
 ): Token[] {
   const rerun = (expression: Exp, referenceIsIdentifier?: boolean) => {
-    return extractTokensFromExpression(expression, ctx, runner, {
+    return extractTokensFromExpression(expression, ctx, {
       isIdentifier: referenceIsIdentifier || isIdentifier,
+      debug,
     });
   };
 
@@ -175,9 +178,10 @@ function extractTokensFromExpression(
     return writes.flatMap((n) => rerun(n, true));
   }
 
-  // if (is(exp, "MemberExpression") && is(exp.property, "Identifier")) {
-  //   return [];
-  // }
+  if (is(exp, "MemberExpression")) {
+    // Unsupported
+    return [];
+  }
 
   /*
   if (is(exp, "ArrowFunctionExpression")) {
@@ -225,7 +229,14 @@ function extractTokensFromExpression(
   // }
 
   if (!unimplemented.has(exp.type)) {
-    console.log("Unimplemented: ", exp.type, exp);
+    if (debug) {
+      console.log(
+        "rtl-friendly plugin detected that you are writing your writing your tailwind classes in a way that is not yet supported by this plugin.\n" +
+          "Kindly open an issue on GitHub so we can add support for this case. Thanks!\n" +
+          `https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/issues/new?title=Unimplemented+Node%3A+%60${exp.type}%60\n`,
+        "You can disable this warning by setteng the `debug` option to `false` the rule options."
+      );
+    }
     unimplemented.add(exp.type);
   }
 
