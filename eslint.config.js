@@ -4,7 +4,7 @@ import js from "@eslint/js";
 import eslintPlugin from "eslint-plugin-eslint-plugin";
 import { config, configs } from "typescript-eslint";
 
-import rtlFriendly from "./dist/index.js";
+import rtlFriendly, { ruleSettings } from "./dist/index.js";
 
 export default config(
   {
@@ -25,5 +25,11 @@ export default config(
   {
     files: ["**/*.{tsx,jsx}"],
     ...rtlFriendly.configs.recommended,
+    rules: {
+      "rtl-friendly/no-physical-properties": [
+        "warn",
+        ruleSettings({ allowPhysicalInsetWithAbsolute: true }),
+      ],
+    },
   }
 );

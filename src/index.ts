@@ -1,6 +1,9 @@
 import type { FlatConfig } from "@typescript-eslint/utils/ts-eslint";
 import { name, version } from "../package.json";
-import { noPhysicalProperties } from "./rules/no-phyisical-properties/rule.js";
+import {
+  noPhysicalProperties,
+  ruleSettings,
+} from "./rules/no-phyisical-properties/rule.js";
 
 const rtlFriendly = {
   meta: { name, version },
@@ -32,3 +35,5 @@ const configs = {
 Object.assign(rtlFriendly.configs, configs);
 
 export default rtlFriendly;
+
+export { ruleSettings, rtlFriendly };
