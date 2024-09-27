@@ -25,8 +25,6 @@ export function extractTokensFromNode(
   ctx: Context,
   runner: "checker" | "fixer"
 ): Token[] {
-  const run = (exp: Exp) => extractTokensFromExpression(exp, ctx, runner);
-
   if (node.type === "JSXAttribute") {
     // value: Literal | JSXExpressionContainer | JSXElement | JSXFragment | null
     const value = node.value;
@@ -45,17 +43,18 @@ export function extractTokensFromNode(
       return extractTokensFromExpression(expression, ctx, runner);
     }
 
-    if (value.type === "JSXElement" || value.type === "JSXSpreadChild") {
-      return [];
-    }
+    // if (value.type === "JSXElement" || value.type === "JSXSpreadChild") {
+    //   return [];
+    // }
 
-    return [];
+    // return [];
   }
 
-  if (is(node, "VariableDeclarator")) {
-    if (!node.init) return [];
-    return run(node.init);
-  }
+  // Handled somewhere else > find the call of `getDefinitions`
+  // if (is(node, "VariableDeclarator")) {
+  //   if (!node.init) return [];
+  //   return run(node.init);
+  // }
 
   // if (is(node, "ArrowFunctionExpression")) return run(node);
 
@@ -170,14 +169,15 @@ function extractTokensFromExpression(
 
     const writes = getDefinitions(exp, ctx, scope).filter(
       (r) => r?.type === "Literal" || r?.type === "Identifier"
+      // || r?.type === "ObjectExpression" ||
+      // r?.type === "AssignmentExpression"
     );
-
     return writes.flatMap((n) => rerun(n, true));
   }
 
-  if (is(exp, "MemberExpression")) {
-    return [];
-  }
+  // if (is(exp, "MemberExpression") && is(exp.property, "Identifier")) {
+  //   return [];
+  // }
 
   /*
   if (is(exp, "ArrowFunctionExpression")) {
