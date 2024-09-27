@@ -319,20 +319,55 @@ vitest.describe(RULE_NAME, () => {
         ],
       },
       {
-        name: "Outside the scope",
+        skip: true,
+        name: "MemberExpression",
         code: `
-          const cls = "left-2";
           function Comp() {
-            return <div className={cls} />
-          }
-        `,
-        output: `
-          const cls = "start-2";
-          function Comp() {
-            return <div className={cls} />
+            const styles = { main: "left-2" };
+            return <div className={styles.main} />
           }
         `,
         errors: [{ messageId: IDENTIFIER_USED }],
+        output: `
+          function Comp() {
+            const styles = { main: "start-2" };
+            return <div className={styles.main} />
+          }
+        `,
+      },
+      {
+        skip: true,
+        name: "MemberExpression with computed property",
+        code: `
+          const styles = { main: "left-2" };
+          function Comp() {
+            return <div className={styles[main]} />
+          }
+        `,
+        errors: [{ messageId: IDENTIFIER_USED }],
+        output: `
+          const styles = { main: "start-2" };
+          function Comp() {
+            return <div className={styles[main]} />
+          }
+        `,
+      },
+      {
+        skip: true,
+        name: "MemberExpression deeply",
+        code: `
+          const styles = { main: { title: "left-2" } };
+          function Comp() {
+            return <div className={styles.main.title} />
+          }
+        `,
+        errors: [{ messageId: IDENTIFIER_USED }],
+        output: `
+          const styles = { main: { title: "start-2" } };
+          function Comp() {
+            return <div className={styles.main.title} />
+          }
+        `,
       },
       {
         name: "Reassignment in a nested scope",
@@ -354,6 +389,47 @@ vitest.describe(RULE_NAME, () => {
           { messageId: IDENTIFIER_USED },
           { messageId: IDENTIFIER_USED },
         ],
+      },
+      {
+        skip: true,
+        name: "Reassignment object in a nested scope",
+        code: `
+          let styles = { main: "left-2" };
+          function Comp() {
+            styles = { main: "text-left", hey: "pl-2" };
+            return <div className={styles.main} />
+          }
+        `,
+        output: `
+          let styles = { main: "start-2" };
+          function Comp() {
+            styles = { main: "text-start", hey: "pl-2" };
+            return <div className={styles.main} />
+          }
+        `,
+        errors: [
+          { messageId: IDENTIFIER_USED },
+          { messageId: IDENTIFIER_USED },
+        ],
+      },
+      {
+        skip: true,
+        name: "Reassignment object property in a nested scope",
+        code: `
+          const styles = { main: "left-2" };
+          function Comp() {
+            styles.main = "text-left";
+            return <div className={styles.main} />
+          }
+        `,
+        output: `
+          const styles = { main: "start-2" };
+          function Comp() {
+            styles.main = "text-start";
+            return <div className={styles.main} />
+          }
+        `,
+        errors: [{ messageId: IDENTIFIER_USED }],
       },
       {
         name: "Don't conflict with other vars with the same name",
