@@ -1,15 +1,17 @@
 import type { FlatConfig } from "@typescript-eslint/utils/ts-eslint";
-import { name, version } from "../package.json";
+import pkg from "../package.json" with { type: "json" };
 import {
   noPhysicalProperties,
   ruleSettings,
 } from "./rules/no-phyisical-properties/rule.js";
 
 const rtlFriendly = {
-  meta: { name, version },
+  meta: { name: pkg.name, version: pkg.version },
   configs: {} as { recommended: FlatConfig.Config },
   rules: {
     "no-physical-properties": noPhysicalProperties,
+    // future renaming
+    "tw-logical-properties": noPhysicalProperties,
   },
 };
 
