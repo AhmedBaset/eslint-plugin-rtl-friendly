@@ -4,25 +4,21 @@
 
 ### Minor Changes
 
-- [#60](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/60) [`affc583`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/affc583c48778feea27ff068eaa7ae068e8920c3) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - Add auto-fixing for ternary operator
-
-- [#61](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/61) [`07bbde9`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/07bbde9c715792954c5af91f7426bda66bea5bf7) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - feat: CallExpression, ArrayExpression, ObjectExpression
-
-- [#66](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/66) [`7fb8f4f`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/7fb8f4f7b806c79a8e892632e4321ec6a575149b) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - feat: Support BinaryExpression `"..." + "..."`
-
-- [#57](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/57) [`9c85bbb`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/9c85bbb0e288ade8a470282ab7a63c6f52bab613) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - # Add support for extra className cases
+- [#57](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/57) [`9c85bbb`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/9c85bbb0e288ade8a470282ab7a63c6f52bab613) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - # Add support for more className cases
 
   Previously the plugin only supported literal values like `className="..."`, which lead to a big miss, Now it supports more cases:
 
   - `className={"..."}` (Auto Fixable)
   - Template Literal: ` className={``} ` (Auto Fixable)
-  - Terenary Operator: `className={condition ? "..." : "..."}`:
-    - It reports errors on both consequent and alternate values
-    - But it only fixes the consequent value
+  - Terenary Operator: `className={condition ? "..." : "..."}`
 
-  Currently, Auto Fixing works with only literal values but the goal is to get it to fix all expressions
+- [#60](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/60) [`affc583`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/affc583c48778feea27ff068eaa7ae068e8920c3) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - Add auto-fixing for ternary operator
 
-- [#67](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/67) [`8e6c4ca`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/8e6c4ca519e66611262732e6dbaa5179b1f30980) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - Support TaggedTemplate ("tw\`...`")
+- [#61](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/61) [`07bbde9`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/07bbde9c715792954c5af91f7426bda66bea5bf7) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - feat: detect classes in `CallExpression`, `ArrayExpression`, `ObjectExpression`
+
+- [#66](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/66) [`7fb8f4f`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/7fb8f4f7b806c79a8e892632e4321ec6a575149b) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - feat: Support detecting classes in `BinaryExpression` "..." + "..."`
+
+- [#67](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/67) [`8e6c4ca`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/8e6c4ca519e66611262732e6dbaa5179b1f30980) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - Support `TaggedTemplate` ("tw\`...`")
 
   - tw\`...\` is supported but tw\`... ${...}\` is not yet
 
@@ -30,7 +26,7 @@
 
   ```js
   const a = "text-left";
-  //         ^^^^^^^^^
+  //         ^^^^^^^^^ This text is used later as a class name but contains physical properties such as "text-left". It's better to use logical properties like "test-start" for improved RTL support.
   return <div className={a} />;
   ```
 
@@ -45,7 +41,7 @@
 
 - [#90](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/90) [`f7fa50a`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/f7fa50a8bab6f1ca648c270c6abb745cb1118566) Thanks [@AhmedBaset](https://github.com/AhmedBaset)! - Add option `allowPhysicalInsetWithAbsolute` to allow the use of `left-1/2` with `fixed -translate-x-1/2`
 
-  Add option `debug`
+- Add option `debug`
 
 ### Patch Changes
 
