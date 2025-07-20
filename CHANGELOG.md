@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1
+
+### Patch Changes
+
+- [#109](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/109) [`ba01ebd`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/ba01ebd922366d0ed25d2d7853bf8c9e805354e6) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump @eslint/plugin-kit from 0.3.1 to 0.3.3
+
+- [#112](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/pull/112) [`81aba01`](https://github.com/AhmedBaset/eslint-plugin-rtl-friendly/commit/81aba01f877804c036b19cac8afe68bf01c5605f) Thanks [@renovate](https://github.com/apps/renovate)! - allow tailwindcss v4 as peer
+
 ## 0.4.0
 
 ### Minor Changes
